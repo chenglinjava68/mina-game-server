@@ -1,0 +1,5 @@
+所使用的技术有:
+	spring-3.1.1
+	mybatis-3.2.2
+	mina-2.0.7
+	mysql-5.5
