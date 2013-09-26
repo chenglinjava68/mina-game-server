@@ -63,7 +63,7 @@
 	</context-param>
 	<context-param>
 		<param-name>minaGameServerRootKey</param-name>
-		<param-value>webName.root</param-value>
+		<param-value>minaGameServer.root</param-value>
 	</context-param>
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>

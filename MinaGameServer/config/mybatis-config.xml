@@ -33,6 +33,6 @@
 
 	<!-- Mappers映射 -->
 	<mappers>
-		<mapper resource="com/jqy/server/mapper/User.xml" />
+		<mapper resource="com/jqy/server/mappers/User.xml" />
 	</mappers>
 </configuration>
