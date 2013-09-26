@@ -21,8 +21,8 @@ public class ServerProtocolCodecFactory implements ProtocolCodecFactory {
   private final ServerProtocolEncoder serverProtocolEncoder;
 
   public ServerProtocolCodecFactory(Charset charset) {
-    serverProtocolDecoder=new ServerProtocolDecoder(charset);
-    serverProtocolEncoder=new ServerProtocolEncoder(charset);
+    this.serverProtocolDecoder=new ServerProtocolDecoder(charset);
+    this.serverProtocolEncoder=new ServerProtocolEncoder(charset);
   }
 
   public ProtocolDecoder getDecoder(IoSession arg0) throws Exception {
