@@ -1,36 +1,58 @@
 package com.jqy.client;
 
+import org.apache.log4j.Logger;
+import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
 public class ClientHandler extends IoHandlerAdapter {
 
-  public void exceptionCaught(IoSession arg0, Throwable arg1) throws Exception {
+  private Logger log=Logger.getLogger(this.getClass());
+
+  @Override
+  public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
     // TODO Auto-generated method stub
+    super.exceptionCaught(session, cause);
   }
 
-  public void messageReceived(IoSession arg0, Object arg1) throws Exception {
-    // TODO Auto-generated method stub
+  @Override
+  public void messageReceived(IoSession session, Object message) throws Exception {
+    IoBuffer buf=(IoBuffer)message;
+    int length=buf.getShort();
+    byte[] data=new byte[length];
+    buf.get(data);
+    String jsonString=new String(data, "utf-8");
+    log.debug("接收到的JSON数据=" + jsonString);
   }
 
-  public void messageSent(IoSession arg0, Object arg1) throws Exception {
+  @Override
+  public void messageSent(IoSession session, Object message) throws Exception {
     // TODO Auto-generated method stub
+    super.messageSent(session, message);
   }
 
-  public void sessionClosed(IoSession arg0) throws Exception {
+  @Override
+  public void sessionClosed(IoSession session) throws Exception {
     // TODO Auto-generated method stub
+    super.sessionClosed(session);
   }
 
-  public void sessionCreated(IoSession arg0) throws Exception {
+  @Override
+  public void sessionCreated(IoSession session) throws Exception {
     // TODO Auto-generated method stub
+    super.sessionCreated(session);
   }
 
-  public void sessionIdle(IoSession arg0, IdleStatus arg1) throws Exception {
+  @Override
+  public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
     // TODO Auto-generated method stub
+    super.sessionIdle(session, status);
   }
 
-  public void sessionOpened(IoSession arg0) throws Exception {
+  @Override
+  public void sessionOpened(IoSession session) throws Exception {
     // TODO Auto-generated method stub
+    super.sessionOpened(session);
   }
 }
