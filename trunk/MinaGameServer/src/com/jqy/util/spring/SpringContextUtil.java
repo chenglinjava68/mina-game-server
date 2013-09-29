@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContextAware;
  * 
  * @author Simple
  * @date 2013-3-5 上午11:00:19
- * @Description 主要功能是可以通过beanId来得到spring容器中的bean
+ * @Description 通过spring.xml中配置Bean，主要功能是可以通过beanId来得到spring容器中的bean
  */
 class SpringContextUtil implements ApplicationContextAware {
 
