@@ -88,19 +88,7 @@
 
 	<!-- serverConfig Bean
 	<bean id="serverConfig" class="com.stat.base.ServerConfig">
-		<property name="certificatePath" value="${certificatePath}" />
-		<property name="certificatePassword" value="${certificatePassword}" />
 		<property name="single" value="${single}" />
-		<property name="product" value="${product}" />
-		<property name="officialIap" value="${officialIap}" />
-		<property name="windowsUploadPath" value="${windowsUploadPath}" />
-		<property name="linuxUploadPath" value="${linuxUploadPath}" />
-		<property name="resourceFolder" value="${resourceFolder}" />
-		<property name="windowsIp" value="${windowsIp}" />
-		<property name="windwosPort" value="${windwosPort}" />
-		<property name="linuxIp" value="${linuxIp}" />
-		<property name="linuxPort" value="${linuxPort}" />
-		<property name="projectName" value="${projectName}" />
 	</bean>
 	-->
 	

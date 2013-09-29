@@ -26,7 +26,7 @@ public class Client {
     jsonObject.put("id", 0x0001);
     JSONObject bodyData=new JSONObject();
     bodyData.put("username", "123");
-    bodyData.put("password", "asd");
+    bodyData.put("password", "asd1");
     jsonObject.put("data", bodyData);
     log.debug("Client Request Data=" + jsonObject.toString());
     //

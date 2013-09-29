@@ -21,11 +21,14 @@ public class LoginResp extends AbsRespProtocol {
     return TYPE;
   }
 
-  public LoginResp() {
+  private int result;
+
+  public LoginResp(int result) {
+    this.result=result;
   }
 
   @Override
   public void encode(JSONObject data) {
-    data.put("result", 1);
+    data.put("result", result);
   }
 }

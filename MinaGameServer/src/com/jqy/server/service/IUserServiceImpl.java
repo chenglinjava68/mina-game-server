@@ -13,8 +13,9 @@ public class IUserServiceImpl implements IUserService {
   @Resource
   private UserDao userDao;
 
-  public User login(String username, String password) {
-    return null;
+  public boolean login(String username, String password) {
+    User user=userDao.login(username, password);
+    return user != null ? true : false;
   }
 
   public boolean register(User user) {

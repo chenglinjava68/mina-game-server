@@ -14,21 +14,18 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			#{username},
 			#{password},
 			#{createDate})
-		<!-- 
-		<selectKey keyProperty="id" resultType="int" order="AFTER">
-			select LAST_INSERT_ID() 
-		</selectKey>
-		 -->
 	</insert>
 	
 	<select id="selectAll" resultType="User">
 		SELECT * FROM gs_user
 	</select>
 	
-	<!-- 
-	<select id="selectAllByPage" parameterType="Pagination" resultType="User">
-		SELECT * FROM stat_gem order by createDate desc 
-		limit #{start},#{limit}
+	<select id="login" parameterType="map" resultType="User">
+		SELECT * FROM gs_user WHERE username=#{username} AND password=#{password}
 	</select>
-	 -->
+	
+	<select id="selectAllByPage" parameterType="map" resultType="User">
+		SELECT * FROM gs_user ORDER BY createDate DESC 
+		LIMIT #{start},#{limit}
+	</select>
 </mapper>

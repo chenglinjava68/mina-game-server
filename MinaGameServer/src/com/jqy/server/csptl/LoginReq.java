@@ -53,7 +53,7 @@ public class LoginReq extends AbsReqProtocol {
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
     log.debug("username=" + username + ",password=" + password);
-    userService.login(username, password);
-    return new LoginResp();
+    boolean status=userService.login(username, password);
+    return new LoginResp(status ? 1 : -1);
   }
 }
