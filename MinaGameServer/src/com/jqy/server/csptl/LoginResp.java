@@ -1,6 +1,6 @@
 package com.jqy.server.csptl;
 
-import org.apache.mina.core.buffer.IoBuffer;
+import net.sf.json.JSONObject;
 
 import com.jqy.server.common.Common;
 import com.jqy.server.core.protocol.AbsRespProtocol;
@@ -25,6 +25,7 @@ public class LoginResp extends AbsRespProtocol {
   }
 
   @Override
-  public void encode(IoBuffer buf) {
+  public void encode(JSONObject data) {
+    data.put("result", 1);
   }
 }

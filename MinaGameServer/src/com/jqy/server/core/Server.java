@@ -6,6 +6,8 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -32,11 +34,14 @@ public class Server implements InitializingBean {
 
   private NioSocketAcceptor acceptor;
 
+  @Resource
+  private ServerHandler serverHandler;
+
   private void start() {
     acceptor=new NioSocketAcceptor();
     DefaultIoFilterChainBuilder filterChain=acceptor.getFilterChain();
     filterChain.addLast("codecFilter", new ProtocolCodecFilter(new ServerProtocolCodecFactory(Charset.forName("utf-8"))));
-    acceptor.setHandler(new ServerHandler());
+    acceptor.setHandler(serverHandler);
     try {
       acceptor.bind(new InetSocketAddress(InetAddress.getLocalHost(), PORT));
       log.debug("server started,port=" + PORT);

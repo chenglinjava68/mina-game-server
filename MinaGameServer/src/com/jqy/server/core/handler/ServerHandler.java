@@ -1,5 +1,11 @@
 package com.jqy.server.core.handler;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
@@ -7,14 +13,27 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 
-public class ServerHandler extends IoHandlerAdapter {
+import com.jqy.server.common.Common;
+import com.jqy.server.core.protocol.AbsReqProtocol;
+import com.jqy.server.core.protocol.AbsRespProtocol;
+import com.jqy.util.spring.BeanUtil;
+
+@Component
+public class ServerHandler extends IoHandlerAdapter implements InitializingBean {
 
   private Logger log=Logger.getLogger(this.getClass());
 
+  @Resource
+  private List<AbsReqProtocol> reqProtocols;
+
+  private Map<Short, String> reqProtocolsMap=new HashMap<Short, String>();
+
   @Override
   public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-    log.debug("exceptionCaught");
+    log.debug("exceptionCaught=" + cause);
   }
 
   @Override
@@ -22,13 +41,33 @@ public class ServerHandler extends IoHandlerAdapter {
     log.debug("messageReceived");
     IoBuffer buffer=(IoBuffer)message;
     byte[] data=buffer.array();
-    String s=new String(data, "utf-8");
-    log.debug(s);
-    log.debug("JSON解析数据");
-    JSONObject jsonObject=JSONObject.fromObject(s);
+    String jsonString=new String(data, "utf-8");
+    log.debug("JSON解析数据:" + jsonString);
+    JSONObject jsonObject=JSONObject.fromObject(jsonString);
     int id=jsonObject.getInt("id");
     int type=jsonObject.getInt("type");
-    log.debug("id=" + id + ",type=" + type);
+    log.debug("ID=" + id + ",TYPE=" + type);
+    if(type == Common.REQ) {
+      if(reqProtocolsMap.containsKey((short)id)) {
+        String protocolName=reqProtocolsMap.get((short)id);
+        // 获取相应协议处理类的bean
+        AbsReqProtocol req=BeanUtil.makeNewReqProtocolHandler(protocolName);
+        if(req != null) {
+          JSONObject reqData=jsonObject.getJSONObject("data");
+          req.decode(reqData);
+          AbsRespProtocol resp=req.execute(session, req);
+          JSONObject respData=new JSONObject();
+          resp.encode(respData);
+          session.write(respData);
+        } else {
+          log.debug("NAME=" + protocolName + "的协议不存在");
+        }
+      } else {
+        log.debug("ID=" + id + "的协议不存在");
+      }
+    } else {
+      log.debug("非请求类型协议");
+    }
     // JSONObject jsonObject2=jsonObject.getJSONObject("data");
   }
 
@@ -55,5 +94,28 @@ public class ServerHandler extends IoHandlerAdapter {
   @Override
   public void sessionOpened(IoSession session) throws Exception {
     log.debug("sessionOpened");
+  }
+
+  public void afterPropertiesSet() throws Exception {
+    registerProtocols();
+  }
+
+  /**
+   * 注册协议
+   */
+  private void registerProtocols() {
+    for(AbsReqProtocol reqPtl: reqProtocols) {
+      // 获取协议处理类的类名
+      char[] name=reqPtl.getClass().getSimpleName().toCharArray();
+      name[0]=Character.toLowerCase(name[0]);
+      String className=String.valueOf(name);
+      // 把协议号+类名放入map中
+      if(reqProtocolsMap.containsKey(reqPtl.getProtocolId())) {
+        log.debug(name.toString() + "类的ProtocolId已存在!");
+      } else {
+        reqProtocolsMap.put(reqPtl.getProtocolId(), className);
+        log.debug("注册协议:" + reqPtl.getProtocolId() + "-" + className);
+      }
+    }
   }
 }

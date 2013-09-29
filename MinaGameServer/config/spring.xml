@@ -65,6 +65,8 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="c3p0DataSource" />
 	</bean>
+	
+	<bean id="SpringContextUtil" class="com.jqy.util.spring.SpringContextUtil" />
 
 	<!--
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">

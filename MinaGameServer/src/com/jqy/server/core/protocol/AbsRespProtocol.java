@@ -1,6 +1,6 @@
 package com.jqy.server.core.protocol;
 
-import org.apache.mina.core.buffer.IoBuffer;
+import net.sf.json.JSONObject;
 
 public abstract class AbsRespProtocol implements IProtocol {
 
@@ -12,5 +12,5 @@ public abstract class AbsRespProtocol implements IProtocol {
     return 0;
   }
 
-  public abstract void encode(IoBuffer buf);
+  public abstract void encode(JSONObject data);
 }
