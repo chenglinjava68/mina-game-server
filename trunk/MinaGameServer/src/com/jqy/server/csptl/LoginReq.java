@@ -1,5 +1,7 @@
 package com.jqy.server.csptl;
 
+import javax.annotation.Resource;
+
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
@@ -7,9 +9,10 @@ import org.apache.mina.core.session.IoSession;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.jqy.server.common.Common;
+import com.jqy.server.common.Constant;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
+import com.jqy.server.service.IUserService;
 
 /**
  * 登陆请求协议
@@ -26,7 +29,7 @@ public class LoginReq extends AbsReqProtocol {
 
   private Logger log=Logger.getLogger(this.getClass());
 
-  private static final byte TYPE=Common.REQ;
+  private static final byte TYPE=Constant.REQ;
 
   private static final short ID=0x0001;
 
@@ -39,6 +42,9 @@ public class LoginReq extends AbsReqProtocol {
   public byte getProtocolType() {
     return TYPE;
   }
+  
+  @Resource
+  private IUserService userService;
 
   private String username;
 

@@ -22,7 +22,7 @@ public class Client {
     cf.awaitUninterruptibly();
     // send data
     JSONObject jsonObject=new JSONObject();
-    jsonObject.put("type", com.jqy.server.common.Common.REQ);
+    jsonObject.put("type", com.jqy.server.common.Constant.REQ);
     jsonObject.put("id", 0x0001);
     JSONObject bodyData=new JSONObject();
     bodyData.put("username", "123");

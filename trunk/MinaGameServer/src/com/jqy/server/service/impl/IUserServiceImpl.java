@@ -1,17 +1,18 @@
-package com.jqy.server.service;
+package com.jqy.server.service.impl;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jqy.server.dao.UserDao;
+import com.jqy.server.dao.impl.IUserDaoImpl;
 import com.jqy.server.entity.User;
+import com.jqy.server.service.IUserService;
 
 @Service
 public class IUserServiceImpl implements IUserService {
 
   @Resource
-  private UserDao userDao;
+  private IUserDaoImpl userDao;
 
   public boolean login(String username, String password) {
     User user=userDao.login(username, password);
