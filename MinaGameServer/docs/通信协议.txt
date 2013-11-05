@@ -1,11 +1,17 @@
-客户端与服务器之间的通信协议使用json格式的数据进行通讯
+客户端与服务器之间使用JSON格式的数据进行通讯
 
-
-协议格式：
+---------------------------------------------------------------------
+【使用自定义协议格式】
+协议格式：报头+报体
 	报头		short		(2)					报体长度
 	报体		byte[]		(长度由short决定)	具体数据
 	
-	报体内容:
+	报体格式：
+		type	协议类型
+		id		协议编号
+		data[]	具体数据
+		
+	报体内容示例:
 		1、{type:协议类型,id:协议编号,data:[{name:xxx,age:xxx},{name:zzz,age:zzz}]}
 		2、{type:协议类型,id:协议编号,data:[username:xxx,passwrod:xxx]}
 		3、{type:协议类型,id:协议编号,data:[username:xxx,passwrod:xxx,users:[{name:xxx,age:xxx},{name:zzz,age:zzz}]]}

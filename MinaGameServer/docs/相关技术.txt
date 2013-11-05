@@ -1,0 +1,14 @@
+使用到
+	spring-3.1.1
+	mybatis-3.2.2
+	mina-2.0.7
+	mysql-5.5
+	c3p0
+	
+mina做socket层通信
+spring来进行管理
+
+
+mysql master/slave 主从库？读写分离？
+主用myisam引擎
+读写分离适用与读远大于写的场景

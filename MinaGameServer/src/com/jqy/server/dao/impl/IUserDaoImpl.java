@@ -1,4 +1,4 @@
-package com.jqy.server.dao;
+package com.jqy.server.dao.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,10 +6,12 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.jqy.server.dao.BaseDao;
+import com.jqy.server.dao.IUserDao;
 import com.jqy.server.entity.User;
 
 @Repository
-public class UserDao extends BaseDao {
+public class IUserDaoImpl extends BaseDao implements IUserDao {
 
   public User login(String username, String password) {
     SqlSession session=getSessionFactory().openSession();

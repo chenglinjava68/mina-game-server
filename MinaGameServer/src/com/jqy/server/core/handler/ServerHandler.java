@@ -16,7 +16,7 @@ import org.apache.mina.core.session.IoSession;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import com.jqy.server.common.Common;
+import com.jqy.server.common.Constant;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
 import com.jqy.util.spring.BeanUtil;
@@ -47,7 +47,7 @@ public class ServerHandler extends IoHandlerAdapter implements InitializingBean 
     int id=jsonObject.getInt("id");
     int type=jsonObject.getInt("type");
     log.debug("ID=" + id + ",TYPE=" + type);
-    if(type == Common.REQ) {
+    if(type == Constant.REQ) {
       if(reqProtocolsMap.containsKey((short)id)) {
         String protocolName=reqProtocolsMap.get((short)id);
         // 获取相应协议处理类的bean
