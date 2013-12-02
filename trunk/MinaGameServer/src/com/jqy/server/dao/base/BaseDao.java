@@ -1,4 +1,4 @@
-package com.jqy.server.dao;
+package com.jqy.server.dao.base;
 
 import java.util.List;
 
@@ -21,11 +21,11 @@ public abstract class BaseDao implements ICommonDao {
   @Resource(name="sqlSessionFactory")
   protected SqlSessionFactory sessionFactory;
 
-  public SqlSessionFactory getSessionFactory() {
+  protected SqlSessionFactory getSessionFactory() {
     return sessionFactory;
   }
 
-  public void setSessionFactory(SqlSessionFactory sessionFactory) {
+  protected void setSessionFactory(SqlSessionFactory sessionFactory) {
     this.sessionFactory=sessionFactory;
   }
 
