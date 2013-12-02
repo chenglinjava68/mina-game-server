@@ -1,4 +1,4 @@
-package com.jqy.server.dao;
+package com.jqy.server.dao.base;
 
 import java.util.List;
 

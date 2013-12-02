@@ -4,7 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jqy.server.dao.impl.IUserDaoImpl;
+import com.jqy.server.dao.IUserDao;
 import com.jqy.server.entity.user.User;
 import com.jqy.server.service.IUserService;
 
@@ -12,15 +12,23 @@ import com.jqy.server.service.IUserService;
 public class IUserServiceImpl implements IUserService {
 
   @Resource
-  private IUserDaoImpl userDao;
+  private IUserDao userDao;
 
+  @Override
   public boolean login(String username, String password) {
     User user=userDao.login(username, password);
     return user != null ? true : false;
   }
 
+  @Override
   public boolean register(User user) {
-    int status=userDao.create("Mapper_User.add", user);
+    int status=userDao.register(user);
     return status > 0 ? true : false;
+  }
+
+  @Override
+  public User selectByUsername(String username) {
+    User user=userDao.selectByUsername(username);
+    return user;
   }
 }

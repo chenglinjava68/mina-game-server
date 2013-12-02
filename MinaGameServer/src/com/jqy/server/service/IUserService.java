@@ -6,6 +6,7 @@ public interface IUserService {
 
   /**
    * 登陆
+   * 
    * @param username
    * @param password
    * @return
@@ -14,8 +15,16 @@ public interface IUserService {
 
   /**
    * 注册
+   * 
    * @param user
    * @return
    */
   public boolean register(User user);
+
+  /**
+   * 通过用户名查询用户
+   * @param username
+   * @return
+   */
+  public User selectByUsername(String username);
 }

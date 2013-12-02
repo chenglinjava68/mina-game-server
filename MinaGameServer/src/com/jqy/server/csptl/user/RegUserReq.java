@@ -1,4 +1,6 @@
-package com.jqy.server.csptl;
+package com.jqy.server.csptl.user;
+
+import java.util.Date;
 
 import javax.annotation.Resource;
 
@@ -12,10 +14,11 @@ import org.springframework.stereotype.Component;
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
+import com.jqy.server.entity.user.User;
 import com.jqy.server.service.IUserService;
 
 /**
- * 登陆请求协议
+ * 注册用户 请求协议
  * 
  * 此类协议都要使用原型模式
  * 
@@ -25,13 +28,13 @@ import com.jqy.server.service.IUserService;
  */
 @Component
 @Scope("prototype")
-public class LoginReq extends AbsReqProtocol {
+public class RegUserReq extends AbsReqProtocol {
 
   private Logger log=Logger.getLogger(this.getClass());
 
   private static final byte TYPE=Constant.REQ;
 
-  private static final short ID=0x0001;
+  private static final short ID=0x0003;
 
   @Override
   public short getProtocolId() {
@@ -50,16 +53,29 @@ public class LoginReq extends AbsReqProtocol {
 
   private String password;
 
+  private String email;
+
   @Override
   public void decode(JSONObject data) {
     username=data.getString("username");
     password=data.getString("password");
+    email=data.getString("email");
   }
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    log.debug("username=" + username + ",password=" + password);
-    boolean status=userService.login(username, password);
-    return new LoginResp(status ? Constant.SUCCESS : Constant.FAILD);
+    log.debug(String.format("username=%s,password=%s,email=%s", username, password, email));
+    User user=userService.selectByUsername(username);
+    if(null == user) {
+      user=new User();
+      user.setRegDate(new Date());
+      user.setUsername(username);
+      user.setPassword(password);
+      user.setEmail(email);
+      userService.register(user);
+      return new RegUserResp(Constant.SUCCESS);
+    } else {
+      return new RegUserResp(Constant.FAILD);
+    }
   }
 }
