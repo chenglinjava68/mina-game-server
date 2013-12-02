@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jqy.server.dao.BaseDao;
 import com.jqy.server.dao.IUserDao;
-import com.jqy.server.entity.User;
+import com.jqy.server.entity.user.User;
 
 @Repository
 public class IUserDaoImpl extends BaseDao implements IUserDao {
@@ -19,7 +19,7 @@ public class IUserDaoImpl extends BaseDao implements IUserDao {
       Map<String, String> params=new HashMap<String, String>();
       params.put("username", username);
       params.put("password", password);
-      return session.selectOne("Mapper_User.login", params);
+      return session.selectOne("Mapper.User.login", params);
     } finally {
       session.close();
     }

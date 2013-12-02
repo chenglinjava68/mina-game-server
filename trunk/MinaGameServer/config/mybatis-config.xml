@@ -27,12 +27,16 @@
 
 	<!-- POJO别名,方便书写 -->
 	<typeAliases>
-		<typeAlias type="com.jqy.server.entity.User" alias="User" />
+		<typeAlias type="com.jqy.server.entity.user.User" alias="User" />
+		<typeAlias type="com.jqy.server.entity.player.Player" alias="Player" />
+		<typeAlias type="com.jqy.server.entity.job.Job" alias="Job" />
 	</typeAliases>
 
 
 	<!-- Mappers映射 -->
 	<mappers>
 		<mapper resource="com/jqy/server/mappers/User.xml" />
+		<mapper resource="com/jqy/server/mappers/Player.xml" />
+		<mapper resource="com/jqy/server/mappers/Job.xml" />
 	</mappers>
 </configuration>

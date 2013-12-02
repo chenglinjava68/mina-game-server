@@ -1,6 +1,6 @@
 package com.jqy.server.service;
 
-import com.jqy.server.entity.User;
+import com.jqy.server.entity.user.User;
 
 public interface IUserService {
 

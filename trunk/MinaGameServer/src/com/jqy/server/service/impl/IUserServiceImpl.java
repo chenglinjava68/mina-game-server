@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jqy.server.dao.impl.IUserDaoImpl;
-import com.jqy.server.entity.User;
+import com.jqy.server.entity.user.User;
 import com.jqy.server.service.IUserService;
 
 @Service
@@ -20,7 +20,7 @@ public class IUserServiceImpl implements IUserService {
   }
 
   public boolean register(User user) {
-    int status=userDao.add("Mapper_User.add", user);
+    int status=userDao.create("Mapper_User.add", user);
     return status > 0 ? true : false;
   }
 }

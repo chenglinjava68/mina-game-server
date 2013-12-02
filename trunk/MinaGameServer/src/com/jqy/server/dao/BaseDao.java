@@ -30,7 +30,7 @@ public abstract class BaseDao implements ICommonDao {
   }
 
   //对ICommomDao方法的实现//
-  public int add(String mapperName, Object obj) {
+  public int create(String mapperName, Object obj) {
     SqlSession session=getSessionFactory().openSession();
     try {
       return session.insert(mapperName, obj);

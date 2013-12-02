@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="Mapper.Player">
+
+	<parameterMap type="Player" id="playerPM">
+		<parameter property="id"/>
+		<parameter property="nickName"/>
+		<parameter property="sex"/>
+		<parameter property="regDate"/>
+		<parameter property="modDate"/>
+	</parameterMap>
+	
+	<resultMap type="Player" id="playerRM">
+		<id property="id" column="id"/>
+		<result property="nickName" column="nickName"/>
+		<result property="sex" column="sex"/>
+		<result property="regDate" column="regDate"/>
+		<result property="modDate" column="modDate"/>
+		<association property="job" column="job_id" javaType="Job" select="Mapper.Job.getJobById"></association>
+		<association property="user" column="user_id" javaType="User" select="Mapper.User.getUserById"></association>
+	</resultMap>
+
+	<insert id="create" parameterType="Player" useGeneratedKeys="true">
+		INSERT INTO t_player(nickName,sex,regDate,modDate,job_id,user_id) 
+		VALUES(#{nickName},#{sex},#{regDate},#{modDate},#{job.id},#{user.id})
+	</insert>
+	
+	<update id="update" parameterType="Player">
+		UPDATE t_player SET
+		nickName=#{nickName},
+		sex=#{sex},
+		regDate=#{regDate},
+		modDate=#{modDate}
+		WHERE id=#{id};
+	</update>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM t_player WHERE
+		id=#{id}
+	</delete>
+	
+	<select id="getPlayerById" parameterType="int" parameterMap="playerPM">
+		SELECT * FROM t_player WHERE id=#{id}
+	</select>
+</mapper>

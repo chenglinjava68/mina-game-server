@@ -16,7 +16,7 @@ public interface ICommonDao {
    * @param obj
    * @return
    */
-  public int add(String mapperName, Object obj);
+  public int create(String mapperName, Object obj);
 
   /**
    * 删除
