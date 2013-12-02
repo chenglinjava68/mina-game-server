@@ -1,6 +1,6 @@
 package com.jqy.server.dao;
 
-import com.jqy.server.entity.User;
+import com.jqy.server.entity.user.User;
 
 /**
  * UserDao

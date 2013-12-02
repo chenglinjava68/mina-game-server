@@ -42,7 +42,7 @@ public class LoginReq extends AbsReqProtocol {
   public byte getProtocolType() {
     return TYPE;
   }
-  
+
   @Resource
   private IUserService userService;
 
@@ -60,6 +60,6 @@ public class LoginReq extends AbsReqProtocol {
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
     log.debug("username=" + username + ",password=" + password);
     boolean status=userService.login(username, password);
-    return new LoginResp(status ? 1 : -1);
+    return new LoginResp(status ? Constant.SUCCESS : Constant.FAILD);
   }
 }

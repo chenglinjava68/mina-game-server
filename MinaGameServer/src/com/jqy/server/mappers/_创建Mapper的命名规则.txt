@@ -1,0 +1,18 @@
+namespace=Mapper.Abc
+
+parameterMap id--->xxxPM
+
+resultMap id--->xxxRM
+
+
+getAbcAbc之类的，主要在关联中使用
+
+
+创建
+create
+更新
+update
+删除
+delete
+查询
+selectAbcAbc
