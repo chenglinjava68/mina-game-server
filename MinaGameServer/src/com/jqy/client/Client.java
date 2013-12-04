@@ -57,6 +57,7 @@ public class Client {
     connector.dispose();
   }
 
+  @SuppressWarnings("unused")
   private JSONObject regUser() {
     JSONObject jsonObject=new JSONObject();
     jsonObject.put("type", Constant.REQ);
@@ -70,6 +71,7 @@ public class Client {
     return jsonObject;
   }
 
+  @SuppressWarnings("unused")
   private JSONObject login() {
     JSONObject jsonObject=new JSONObject();
     jsonObject.put("type", Constant.REQ);
@@ -82,6 +84,7 @@ public class Client {
     return jsonObject;
   }
 
+  @SuppressWarnings("unused")
   private JSONObject regPlayer() {
     JSONObject jsonObject=new JSONObject();
     jsonObject.put("type", Constant.REQ);

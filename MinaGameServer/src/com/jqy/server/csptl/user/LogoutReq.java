@@ -14,10 +14,9 @@ import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
 import com.jqy.server.entity.user.User;
 import com.jqy.server.service.IOnlineService;
-import com.jqy.server.service.IUserService;
 
 /**
- * 登陆 请求协议
+ * 退出 请求协议
  * 
  * 此类协议都要使用原型模式
  * 
@@ -27,13 +26,13 @@ import com.jqy.server.service.IUserService;
  */
 @Component
 @Scope("prototype")
-public class LoginReq extends AbsReqProtocol {
+public class LogoutReq extends AbsReqProtocol {
 
   private Logger log=Logger.getLogger(this.getClass());
 
   private static final byte TYPE=Constant.REQ;
 
-  private static final short ID=0x0003;
+  private static final short ID=0x0009;
 
   @Override
   public short getProtocolId() {
@@ -46,29 +45,21 @@ public class LoginReq extends AbsReqProtocol {
   }
 
   @Resource
-  private IUserService userService;
-
-  @Resource
   private IOnlineService onlineService;
-
-  private String username;
-
-  private String password;
 
   @Override
   public void decode(JSONObject data) {
-    username=data.getString("username");
-    password=data.getString("password");
+    // 数据解码
   }
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    log.debug("username=" + username + ",password=" + password);
-    User user=userService.login(username, password);
-    if(null != user) {
-      session.setAttribute("user", user);
-      onlineService.setConnected(username, session);
-    }
-    return new LoginResp(null != user ? Constant.SUCCESS : Constant.FAILD);
+    User user=(User)session.getAttribute("user");
+    String username=user.getUsername();
+    log.debug(String.format("username=%s logout!", username));
+    // 逻辑执行
+    onlineService.removeConnected(username);
+    onlineService.removeOnline(username);
+    return new LogoutResp(Constant.SUCCESS);
   }
 }

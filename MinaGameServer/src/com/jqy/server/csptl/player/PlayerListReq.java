@@ -18,7 +18,7 @@ import com.jqy.server.entity.player.Player;
 import com.jqy.server.service.IPlayerService;
 
 /**
- * 玩家列表 请求协议，供Copy使用
+ * 玩家列表 请求协议
  * 
  * 此类协议都要使用原型模式
  * 

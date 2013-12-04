@@ -40,8 +40,10 @@ public class DemoReq extends AbsReqProtocol {
     return TYPE;
   }
 
+  @SuppressWarnings("unused")
   private String param1;
 
+  @SuppressWarnings("unused")
   private String param2;
 
   @Override
@@ -53,7 +55,7 @@ public class DemoReq extends AbsReqProtocol {
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    log.debug("username=" + param1 + ",password=" + param2);
+    log.debug(String.format("demo execute %s", "1"));
     // 逻辑执行
     return new DemoResp();
   }
