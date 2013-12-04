@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
+import com.jqy.server.entity.user.User;
 import com.jqy.server.service.IUserService;
 
 /**
@@ -31,7 +32,7 @@ public class LoginReq extends AbsReqProtocol {
 
   private static final byte TYPE=Constant.REQ;
 
-  private static final short ID=0x0001;
+  private static final short ID=0x0003;
 
   @Override
   public short getProtocolId() {
@@ -59,7 +60,10 @@ public class LoginReq extends AbsReqProtocol {
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
     log.debug("username=" + username + ",password=" + password);
-    boolean status=userService.login(username, password);
-    return new LoginResp(status ? Constant.SUCCESS : Constant.FAILD);
+    User user=userService.login(username, password);
+    if(null != user) {
+      session.setAttribute("user", user);
+    }
+    return new LoginResp(null != user ? Constant.SUCCESS : Constant.FAILD);
   }
 }

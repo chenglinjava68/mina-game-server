@@ -11,7 +11,7 @@ public interface IUserService {
    * @param password
    * @return
    */
-  public boolean login(String username, String password);
+  public User login(String username, String password);
 
   /**
    * 注册
@@ -23,6 +23,7 @@ public interface IUserService {
 
   /**
    * 通过用户名查询用户
+   * 
    * @param username
    * @return
    */

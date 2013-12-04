@@ -1,5 +1,9 @@
 package com.jqy.server.csptl.player;
 
+import java.util.Date;
+
+import javax.annotation.Resource;
+
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
@@ -10,6 +14,12 @@ import org.springframework.stereotype.Component;
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
+import com.jqy.server.entity.job.Job;
+import com.jqy.server.entity.job.JobEnum;
+import com.jqy.server.entity.player.Player;
+import com.jqy.server.entity.user.User;
+import com.jqy.server.service.IJobService;
+import com.jqy.server.service.IPlayerService;
 
 /**
  * 注册玩家 请求协议
@@ -40,19 +50,53 @@ public class RegPlayerReq extends AbsReqProtocol {
     return TYPE;
   }
 
-  private String username;
+  @Resource
+  private IPlayerService playerService;
 
-  private String password;
+  @Resource
+  private IJobService jobService;
+
+  private String nickName;
+
+  private boolean sex;
+
+  private int jobId;
 
   @Override
   public void decode(JSONObject data) {
-    username=data.getString("username");
-    password=data.getString("password");
+    nickName=data.getString("nickName");
+    sex=data.getBoolean("sex");
+    jobId=data.getInt("jobId");
   }
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    log.debug("username=" + username + ",password=" + password);
-    return new RegPlayerResp();
+    int status=0;
+    log.debug(String.format("nickName=%s,sex=%s", nickName, sex));
+    Player player=playerService.selectByNickName(nickName);
+    if(null != player) {
+      log.debug(String.format("nickName=%s user exist!", nickName));
+      status=2;
+    } else {
+      player=new Player();
+      player.setNickName(nickName);
+      player.setSex(sex);
+      player.setRegDate(new Date());
+      User user=(User)session.getAttribute("user");
+      if(null != user) {
+        player.setUser(user);
+      }
+      Job job=jobService.selectByType(JobEnum.getByCode(jobId));
+      if(null != job) {
+        player.setJob(job);
+      } else {
+        log.debug(String.format("Job inited faild!can't found jobId=%s", jobId));
+        status=3;
+      }
+      if(playerService.register(player)) {
+        status=1;
+      }
+    }
+    return new RegPlayerResp(status);
   }
 }

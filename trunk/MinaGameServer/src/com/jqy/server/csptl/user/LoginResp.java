@@ -9,7 +9,7 @@ public class LoginResp extends AbsRespProtocol {
 
   private static final byte TYPE=Constant.RESP;
 
-  private static final short ID=0x0002;
+  private static final short ID=0x0004;
 
   @Override
   public short getProtocolId() {

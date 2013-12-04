@@ -9,7 +9,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<parameter property="username" />
 		<parameter property="password" />
 		<parameter property="email" />
-		<parameter property="status" />
+		<parameter property="valid" />
 		<parameter property="regDate" />
 		<parameter property="modDate" />
 	</parameterMap>
@@ -19,7 +19,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<result property="username" column="username" />
 		<result property="password" column="password" />
 		<result property="email" column="email" />
-		<result property="status" column="status" />
+		<result property="valid" column="valid" />
 		<result property="regDate" column="regDate" />
 		<result property="modDate" column="modDate" />
 		<collection property="players" column="player_id"
@@ -28,8 +28,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 
 	<insert id="create" parameterType="User" useGeneratedKeys="true">
 		INSERT
-		INTO t_user(username,password,email,status,regDate,modDate)
-		VALUES(#{username},#{password},#{email},#{status},#{regDate},#{modDate})
+		INTO t_user(username,password,email,valid,regDate,modDate)
+		VALUES(#{username},#{password},#{email},#{valid},#{regDate},#{modDate})
 	</insert>
 
 	<update id="update" parameterType="User">
@@ -37,7 +37,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		username=#{username},
 		password=#{password},
 		email=#{email},
-		status=#{status},
+		valid=#{valid},
 		regDate=#{regDate},
 		modDate=#{modDate}
 		WHERE id=#{id};

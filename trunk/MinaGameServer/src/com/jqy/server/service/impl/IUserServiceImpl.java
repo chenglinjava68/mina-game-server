@@ -1,5 +1,8 @@
 package com.jqy.server.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -11,13 +14,18 @@ import com.jqy.server.service.IUserService;
 @Service
 public class IUserServiceImpl implements IUserService {
 
+  private Map<String, User> onlineUsers=new HashMap<String, User>();
+
   @Resource
   private IUserDao userDao;
 
   @Override
-  public boolean login(String username, String password) {
+  public User login(String username, String password) {
     User user=userDao.login(username, password);
-    return user != null ? true : false;
+    if(null != user) {
+      onlineUsers.put(user.getUsername(), user);
+    }
+    return user;
   }
 
   @Override

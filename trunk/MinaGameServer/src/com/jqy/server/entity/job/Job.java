@@ -1,5 +1,7 @@
 package com.jqy.server.entity.job;
 
+import java.util.Date;
+
 /**
  * 职业
  * 
@@ -23,6 +25,10 @@ public class Job {
 
   private int ms;// 移动速度
 
+  private Date regDate;// 创建日期
+
+  private Date modDate;// 修改日期
+
   public int getId() {
     return id;
   }
@@ -31,12 +37,12 @@ public class Job {
     this.id=id;
   }
 
-  public JobEnum getType() {
-    return type;
+  public int getType() {
+    return type.getCode();
   }
 
-  public void setType(JobEnum type) {
-    this.type=type;
+  public void setType(int code) {
+    this.type=JobEnum.getByCode(code);
   }
 
   public int getHp() {
@@ -77,5 +83,21 @@ public class Job {
 
   public void setMs(int ms) {
     this.ms=ms;
+  }
+
+  public void setRegDate(Date regDate) {
+    this.regDate=regDate;
+  }
+
+  public Date getRegDate() {
+    return regDate;
+  }
+
+  public void setModDate(Date modDate) {
+    this.modDate=modDate;
+  }
+
+  public Date getModDate() {
+    return modDate;
   }
 }

@@ -1,5 +1,7 @@
 package com.jqy.server.service.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -18,5 +20,15 @@ public class IPlayerServiceImpl implements IPlayerService {
   public boolean register(Player player) {
     int status=playerDao.register(player);
     return status > 0 ? true : false;
+  }
+
+  @Override
+  public Player selectByNickName(String nickName) {
+    return playerDao.selectByNickName(nickName);
+  }
+
+  @Override
+  public List<Player> selectAll() {
+    return playerDao.selectAll();
   }
 }

@@ -1,6 +1,6 @@
-package com.jqy.server.csptl.user;
+package com.jqy.server.csptl.player;
 
-import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
-import com.jqy.server.entity.user.User;
-import com.jqy.server.service.IUserService;
+import com.jqy.server.entity.player.Player;
+import com.jqy.server.service.IPlayerService;
 
 /**
- * 注册用户 请求协议
+ * 玩家列表 请求协议，供Copy使用
  * 
  * 此类协议都要使用原型模式
  * 
@@ -28,13 +28,13 @@ import com.jqy.server.service.IUserService;
  */
 @Component
 @Scope("prototype")
-public class RegUserReq extends AbsReqProtocol {
+public class PlayerListReq extends AbsReqProtocol {
 
   private Logger log=Logger.getLogger(this.getClass());
 
   private static final byte TYPE=Constant.REQ;
 
-  private static final short ID=0x0001;
+  private static final short ID=0x0007;
 
   @Override
   public short getProtocolId() {
@@ -47,35 +47,17 @@ public class RegUserReq extends AbsReqProtocol {
   }
 
   @Resource
-  private IUserService userService;
-
-  private String username;
-
-  private String password;
-
-  private String email;
+  private IPlayerService playerService;
 
   @Override
   public void decode(JSONObject data) {
-    username=data.getString("username");
-    password=data.getString("password");
-    email=data.getString("email");
+    // 数据解码
   }
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    log.debug(String.format("username=%s,password=%s,email=%s", username, password, email));
-    User user=userService.selectByUsername(username);
-    if(null == user) {
-      user=new User();
-      user.setRegDate(new Date());
-      user.setUsername(username);
-      user.setPassword(password);
-      user.setEmail(email);
-      userService.register(user);
-      return new RegUserResp(Constant.SUCCESS);
-    } else {
-      return new RegUserResp(Constant.FAILD);
-    }
+    log.debug(String.format("get player list"));
+    List<Player> players=playerService.selectAll();
+    return new PlayerListResp(players.size() > 0 ? Constant.SUCCESS : Constant.FAILD, players);
   }
 }

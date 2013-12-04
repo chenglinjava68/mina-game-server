@@ -45,4 +45,12 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	<select id="getPlayerById" parameterType="int" parameterMap="playerPM">
 		SELECT * FROM t_player WHERE id=#{id}
 	</select>
+	
+	<select id="selectByNickName" parameterType="string" resultType="Player">
+		SELECT * FROM t_player WHERE nickName=#{nickName}
+	</select>
+	
+	<select id="selectAll" resultMap="playerRM">
+		SELECT * FROM t_player
+	</select>
 </mapper>
