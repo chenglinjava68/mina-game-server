@@ -1,5 +1,7 @@
 package com.jqy.server.dao;
 
+import java.util.List;
+
 import com.jqy.server.entity.player.Player;
 
 /**
@@ -12,4 +14,8 @@ import com.jqy.server.entity.player.Player;
 public interface IPlayerDao {
 
   public int register(Player player);
+
+  public Player selectByNickName(String nickName);
+
+  public List<Player> selectAll();
 }

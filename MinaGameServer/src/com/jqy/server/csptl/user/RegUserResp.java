@@ -9,7 +9,7 @@ public class RegUserResp extends AbsRespProtocol {
 
   private static final byte TYPE=Constant.RESP;
 
-  private static final short ID=0x0004;
+  private static final short ID=0x0002;
 
   @Override
   public short getProtocolId() {
