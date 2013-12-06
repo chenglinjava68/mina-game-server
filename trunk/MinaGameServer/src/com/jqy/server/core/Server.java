@@ -1,7 +1,6 @@
 package com.jqy.server.core;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
@@ -43,7 +42,7 @@ public class Server implements InitializingBean {
     filterChain.addLast("codecFilter", new ProtocolCodecFilter(new ServerProtocolCodecFactory(Charset.forName("utf-8"))));
     acceptor.setHandler(serverHandler);
     try {
-      acceptor.bind(new InetSocketAddress(InetAddress.getLocalHost(), PORT));
+      acceptor.bind(new InetSocketAddress(PORT));
       log.debug("server started,port=" + PORT);
     } catch(UnknownHostException e) {
       e.printStackTrace();

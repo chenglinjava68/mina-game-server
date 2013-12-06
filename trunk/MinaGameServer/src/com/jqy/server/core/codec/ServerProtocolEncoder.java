@@ -18,11 +18,10 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
  */
 public class ServerProtocolEncoder extends ProtocolEncoderAdapter {
 
-  @SuppressWarnings("unused")
   private Charset charset;
 
   public ServerProtocolEncoder(Charset charset) {
-    this.charset=charset;
+    this.setCharset(charset);
   }
 
   public void encode(IoSession session, Object obj, ProtocolEncoderOutput out) throws Exception {
@@ -33,5 +32,13 @@ public class ServerProtocolEncoder extends ProtocolEncoderAdapter {
     buf.put(data);
     buf.flip();
     out.write(buf);
+  }
+
+  public void setCharset(Charset charset) {
+    this.charset = charset;
+  }
+
+  public Charset getCharset() {
+    return charset;
   }
 }

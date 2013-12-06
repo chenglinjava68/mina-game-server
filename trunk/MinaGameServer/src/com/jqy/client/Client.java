@@ -8,12 +8,11 @@ import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
-import org.junit.Test;
 
 import com.jqy.server.common.Constant;
 import com.jqy.server.entity.job.JobEnum;
 
-public class Client {
+public class Client implements Runnable {
 
   private Logger log=Logger.getLogger(this.getClass());
 
@@ -23,7 +22,8 @@ public class Client {
     connector=new NioSocketConnector();
     connector.setHandler(new ClientHandler());
     connector.setConnectTimeoutMillis(3000);
-    ConnectFuture cf=connector.connect(new InetSocketAddress(9999));
+    ConnectFuture cf=connector.connect(new InetSocketAddress("localhost", 9999));
+    // ConnectFuture cf=connector.connect(new InetSocketAddress("172.19.0.176", 9999));
     cf.awaitUninterruptibly();
     return cf;
   }
@@ -38,7 +38,23 @@ public class Client {
     cf.getSession().write(buffer);
   }
 
-  @Test
+  public static void main(String[] args) {
+    for(int i=0; i < 100; i++) {
+      Client c=new Client();
+      Thread t=new Thread(c);
+      t.start();
+    }
+    // new Client().buf();
+  }
+
+  public void buf() {
+    String s="{'type':1,'id':7,'data':{}}";
+    IoBuffer buf=IoBuffer.allocate(2 + s.getBytes().length);
+    buf.putShort((short)s.getBytes().length);
+    buf.put(s.getBytes());
+    buf.flip();
+  }
+
   public void clientStart() {
     ConnectFuture cf=getCF();
     // // 注册用户
@@ -50,6 +66,7 @@ public class Client {
     // // 创建玩家
     // JSONObject regPlayerJson=regPlayer();
     // sendData(cf, regPlayerJson);
+    // 获取用户列表
     JSONObject allPlayerJson=getAllPlayer();
     sendData(cf, allPlayerJson);
     //
@@ -57,8 +74,7 @@ public class Client {
     connector.dispose();
   }
 
-  @SuppressWarnings("unused")
-  private JSONObject regUser() {
+  public JSONObject regUser() {
     JSONObject jsonObject=new JSONObject();
     jsonObject.put("type", Constant.REQ);
     jsonObject.put("id", 0x0001);
@@ -71,8 +87,7 @@ public class Client {
     return jsonObject;
   }
 
-  @SuppressWarnings("unused")
-  private JSONObject login() {
+  public JSONObject login() {
     JSONObject jsonObject=new JSONObject();
     jsonObject.put("type", Constant.REQ);
     jsonObject.put("id", 0x0003);
@@ -84,8 +99,7 @@ public class Client {
     return jsonObject;
   }
 
-  @SuppressWarnings("unused")
-  private JSONObject regPlayer() {
+  public JSONObject regPlayer() {
     JSONObject jsonObject=new JSONObject();
     jsonObject.put("type", Constant.REQ);
     jsonObject.put("id", 0x0005);
@@ -98,7 +112,7 @@ public class Client {
     return jsonObject;
   }
 
-  private JSONObject getAllPlayer() {
+  public JSONObject getAllPlayer() {
     JSONObject jsonObject=new JSONObject();
     jsonObject.put("type", Constant.REQ);
     jsonObject.put("id", 0x0007);
@@ -106,5 +120,10 @@ public class Client {
     jsonObject.put("data", bodyData);
     log.debug("Client Request Data=" + jsonObject.toString());
     return jsonObject;
+  }
+
+  @Override
+  public void run() {
+    clientStart();
   }
 }
