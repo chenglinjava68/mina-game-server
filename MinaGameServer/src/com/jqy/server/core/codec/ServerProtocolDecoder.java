@@ -19,11 +19,10 @@ public class ServerProtocolDecoder extends ProtocolDecoderAdapter {
 
   private Logger log=Logger.getLogger(this.getClass());
 
-  @SuppressWarnings("unused")
   private Charset charset;
 
   public ServerProtocolDecoder(Charset charset) {
-    this.charset=charset;
+    this.setCharset(charset);
   }
 
   public void decode(IoSession session, IoBuffer buffer, ProtocolDecoderOutput out) throws Exception {
@@ -48,5 +47,13 @@ public class ServerProtocolDecoder extends ProtocolDecoderAdapter {
     } else {
       log.debug("协议数据不完整");
     }
+  }
+
+  public void setCharset(Charset charset) {
+    this.charset = charset;
+  }
+
+  public Charset getCharset() {
+    return charset;
   }
 }

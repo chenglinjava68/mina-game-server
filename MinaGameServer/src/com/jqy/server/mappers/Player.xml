@@ -19,12 +19,12 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<result property="sex" column="sex"/>
 		<result property="regDate" column="regDate"/>
 		<result property="modDate" column="modDate"/>
-		<association property="job" column="job_id" javaType="Job" select="Mapper.Job.getJobById"></association>
-		<association property="user" column="user_id" javaType="User" select="Mapper.User.getUserById"></association>
+		<association property="job" column="fk_job_id" javaType="Job" select="Mapper.Job.getJobById"></association>
+		<association property="user" column="fk_user_id" javaType="User" select="Mapper.User.getUserById"></association>
 	</resultMap>
 
 	<insert id="create" parameterType="Player" useGeneratedKeys="true">
-		INSERT INTO t_player(nickName,sex,regDate,modDate,job_id,user_id) 
+		INSERT INTO t_player(nickName,sex,regDate,modDate,fk_job_id,fk_user_id) 
 		VALUES(#{nickName},#{sex},#{regDate},#{modDate},#{job.id},#{user.id})
 	</insert>
 	
@@ -42,7 +42,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		id=#{id}
 	</delete>
 	
-	<select id="getPlayerById" parameterType="int" parameterMap="playerPM">
+	<select id="getPlayerById" parameterType="int" resultMap="playerRM">
 		SELECT * FROM t_player WHERE id=#{id}
 	</select>
 	
