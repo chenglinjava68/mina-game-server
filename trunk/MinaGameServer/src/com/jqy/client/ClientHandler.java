@@ -23,7 +23,7 @@ public class ClientHandler extends IoHandlerAdapter {
     byte[] data=new byte[length];
     buf.get(data);
     String jsonString=new String(data, "utf-8");
-    log.debug("接收到的JSON数据=" + jsonString);
+    log.debug("服务器返回结果=" + jsonString);
   }
 
   @Override

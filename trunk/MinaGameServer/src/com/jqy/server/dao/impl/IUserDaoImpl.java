@@ -37,7 +37,12 @@ public class IUserDaoImpl extends BaseDao implements IUserDao {
   }
 
   @Override
-  public int register(User user) {
+  public int create(User user) {
     return create("Mapper.User.create", user);
+  }
+
+  @Override
+  public void update(User user) {
+    update("Mapper.User.update", user);
   }
 }

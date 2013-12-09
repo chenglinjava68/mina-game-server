@@ -82,7 +82,7 @@ public class RegPlayerReq extends AbsReqProtocol {
       player.setNickName(nickName);
       player.setSex(sex);
       player.setRegDate(new Date());
-      User user=(User)session.getAttribute("user");
+      User user=(User)session.getAttribute(Constant.USER);
       if(null != user) {
         player.setUser(user);
       }

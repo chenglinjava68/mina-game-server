@@ -90,7 +90,7 @@ public class StringUtil {
 
   public static void main(String[] args) {
     StringUtil su=new StringUtil();
-    String str="fuck man!";
+    String str="isRequest";
     System.out.println(str);
     // 2
     String binary=su.string2Binary(str);

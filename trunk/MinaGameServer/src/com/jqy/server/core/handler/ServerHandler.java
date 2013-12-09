@@ -57,6 +57,8 @@ public class ServerHandler extends IoHandlerAdapter implements InitializingBean 
           req.decode(reqData);
           AbsRespProtocol resp=req.execute(session, req);
           JSONObject respData=new JSONObject();
+          respData.put("type", resp.getProtocolType());
+          respData.put("id", resp.getProtocolId());
           resp.encode(respData);
           session.write(respData);
         } else {
@@ -114,7 +116,7 @@ public class ServerHandler extends IoHandlerAdapter implements InitializingBean 
         log.debug(name.toString() + "类的ProtocolId已存在!");
       } else {
         reqProtocolsMap.put(reqPtl.getProtocolId(), className);
-        log.debug("注册协议:" + reqPtl.getProtocolId() + "-" + className);
+        log.debug(String.format("注册协议[%s] \t 编号[%s]", className, reqPtl.getProtocolId()));
       }
     }
   }

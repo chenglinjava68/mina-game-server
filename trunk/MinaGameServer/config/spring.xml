@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx" 
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans 
@@ -65,43 +63,38 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="c3p0DataSource" />
 	</bean>
-	
+
 	<bean id="SpringContextUtil" class="com.jqy.util.spring.SpringContextUtil" />
 
 	<!--
-	<tx:advice id="txAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-			<tx:method name="create*" propagation="REQUIRED" /> 
-			<tx:method name="remove*" propagation="REQUIRED" /> 
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="add*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="*" read-only="true" />
-		</tx:attributes>
-	</tx:advice>
-	<aop:config>
-		<aop:pointcut id="allManagerMethod" expression="execution (* com.stat.service.*.*(..))" />
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="allManagerMethod" />
-	</aop:config>
+		<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes> <tx:method name="create*" propagation="REQUIRED" />
+		<tx:method name="remove*" propagation="REQUIRED" /> <tx:method
+		name="save*" propagation="REQUIRED" /> <tx:method name="add*"
+		propagation="REQUIRED" /> <tx:method name="delete*"
+		propagation="REQUIRED" /> <tx:method name="update*"
+		propagation="REQUIRED" /> <tx:method name="*" read-only="true" />
+		</tx:attributes> </tx:advice> <aop:config> <aop:pointcut
+		id="allManagerMethod" expression="execution (*
+		com.stat.service.*.*(..))" /> <aop:advisor advice-ref="txAdvice"
+		pointcut-ref="allManagerMethod" /> </aop:config>
 	-->
 
-	<!-- serverConfig Bean
-	<bean id="serverConfig" class="com.stat.base.ServerConfig">
-		<property name="single" value="${single}" />
-	</bean>
+	<!--
+		serverConfig Bean <bean id="serverConfig"
+		class="com.stat.base.ServerConfig"> <property name="single"
+		value="${single}" /> </bean>
 	-->
-	
-	<!-- 配置 文件上传的支持 
-	<bean id="multipartResolver"
+
+	<!--
+		配置 文件上传的支持 <bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<property name="maxUploadSize" value="1024000000" />
-		<property name="resolveLazily" value="true" />
-		<property name="maxInMemorySize" value="4096" />
-	</bean>
+		<property name="maxUploadSize" value="1024000000" /> <property
+		name="resolveLazily" value="true" /> <property name="maxInMemorySize"
+		value="4096" /> </bean>
 	-->
-	
-	<!-- spring定时器开启 
+
+	<!-- spring定时器开启-->
 	<task:annotation-driven />
-	-->
+
 </beans>

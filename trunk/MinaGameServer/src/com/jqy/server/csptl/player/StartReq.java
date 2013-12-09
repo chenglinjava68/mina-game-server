@@ -15,10 +15,11 @@ import com.jqy.server.common.Constant;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
 import com.jqy.server.entity.player.Player;
-import com.jqy.server.service.IPlayerService;
+import com.jqy.server.entity.user.User;
+import com.jqy.server.service.IOnlineService;
 
 /**
- * 玩家列表 请求协议
+ * 开始游戏 请求协议
  * 
  * 此类协议都要使用原型模式
  * 
@@ -28,13 +29,13 @@ import com.jqy.server.service.IPlayerService;
  */
 @Component
 @Scope("prototype")
-public class PlayerListReq extends AbsReqProtocol {
+public class StartReq extends AbsReqProtocol {
 
   private Logger log=Logger.getLogger(this.getClass());
 
   private static final byte TYPE=Constant.REQ;
 
-  private static final short ID=0x0007;
+  private static final short ID=0x0011;
 
   @Override
   public short getProtocolId() {
@@ -47,16 +48,28 @@ public class PlayerListReq extends AbsReqProtocol {
   }
 
   @Resource
-  private IPlayerService playerService;
+  private IOnlineService onlineService;
+
+  private int roleIndex;
 
   @Override
   public void decode(JSONObject data) {
+    roleIndex=data.getInt("roleIndex");
   }
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    log.debug(String.format("player list execute"));
-    List<Player> players=playerService.selectAll();
-    return new PlayerListResp(players.size() > 0 ? Constant.SUCCESS : Constant.FAILD, players);
+    log.debug(String.format("start execute"));
+    User u=(User)session.getAttribute(Constant.USER);
+    List<Player> players=u.getPlayers();
+    if(players.size() > 10) {
+      Player player=players.get(roleIndex);
+      if(null != player) {
+        session.setAttribute(Constant.PLAYER, player);
+        onlineService.setOnlinePlayer(session, player);
+        return new StartResp(Constant.SUCCESS);
+      }
+    }
+    return new StartResp(Constant.FAILD);
   }
 }

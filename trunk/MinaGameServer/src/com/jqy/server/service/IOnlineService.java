@@ -1,54 +1,28 @@
 package com.jqy.server.service;
 
 import java.util.Map;
+import java.util.Queue;
 
 import org.apache.mina.core.session.IoSession;
 
+import com.jqy.server.entity.player.Player;
 import com.jqy.server.entity.user.User;
 
 public interface IOnlineService {
 
-  /**
-   * 获取在线用户列表
-   * 
-   * @return
-   */
-  public Map<String, User> getOnlineUsers();
+  public Queue<Player> getOnlinePlayers();
 
-  /**
-   * 获取已连接用户列表
-   * 
-   * @return
-   */
-  public Map<String, IoSession> getConnecteds();
+  public void setOnlinePlayer(IoSession session, Player player);
 
-  /***
-   * 添加已连接用户
-   * 
-   * @param username
-   * @param session
-   * @return
-   */
-  public boolean setConnected(String username, IoSession session);
+  public void removeOnlinePlayer(Player player);
 
-  /**
-   * 添加在线用户
-   * 
-   * @param username
-   * @param user
-   * @return
-   */
-  public boolean setOnline(String username, User user);
+  public Map<User, IoSession> getConnectedUsers();
 
-  /**
-   * 移除连接用户
-   * @param username
-   */
-  public void removeConnected(String username);
+  public void setConnectedUser(User user, IoSession session);
 
-  /**
-   * 移除在线用户
-   * @param username
-   */
-  public void removeOnline(String username);
+  public void removeConnectedUser(User user);
+
+  public IoSession getIoSessionByUser(User user);
+
+  public Player getPlayerByIoSession(IoSession session);
 }
