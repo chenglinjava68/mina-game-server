@@ -30,6 +30,16 @@ public class Constant {
   public static final int FAILD=0;
 
   /**
+   * IoSession用户属性
+   */
+  public static final String USER="user";
+
+  /**
+   * IoSession玩家属性
+   */
+  public static final String PLAYER="player";
+
+  /**
    * 用户状态-有效
    */
   public static final boolean USER_VALID=true;

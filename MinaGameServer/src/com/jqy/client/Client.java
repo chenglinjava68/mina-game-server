@@ -20,10 +20,15 @@ public class Client implements Runnable {
 
   private ConnectFuture getCF() {
     connector=new NioSocketConnector();
+    // SocketSessionConfig ssc=connector.getSessionConfig();
+    // 空闲
+    // ssc.setIdleTime(IdleStatus.BOTH_IDLE, 120);
+    // connector.getFilterChain().addLast("code", new ProtocolCodecFilter(new
+    // ServerProtocolCodecFactory(Charset.forName("utf-8"))));
     connector.setHandler(new ClientHandler());
     connector.setConnectTimeoutMillis(3000);
-     ConnectFuture cf=connector.connect(new InetSocketAddress("localhost", 9999));
-//    ConnectFuture cf=connector.connect(new InetSocketAddress("172.19.0.176", 9999));
+    ConnectFuture cf=connector.connect(new InetSocketAddress("localhost", 9999));
+    // ConnectFuture cf=connector.connect(new InetSocketAddress("172.19.0.176", 9999));
     cf.awaitUninterruptibly();
     return cf;
   }
@@ -31,8 +36,7 @@ public class Client implements Runnable {
   private void sendData(ConnectFuture cf, JSONObject jsonObject) {
     // 封装bodyData
     byte[] body=jsonObject.toString().getBytes();
-    IoBuffer buffer=IoBuffer.allocate(2 + 2 + body.length);
-    buffer.putShort((short)body.length);
+    IoBuffer buffer=IoBuffer.allocate(2 + body.length);
     buffer.putShort((short)body.length);
     buffer.put(body);
     buffer.flip();
@@ -70,14 +74,15 @@ public class Client implements Runnable {
     // JSONObject regUserJson=regUser();
     // sendData(cf, regUserJson);
     // // 登陆
-    // JSONObject loginJson=login();
-    // sendData(cf, loginJson);
     // // 创建玩家
     // JSONObject regPlayerJson=regPlayer();
     // sendData(cf, regPlayerJson);
-    // 获取用户列表
-    JSONObject allPlayerJson=getAllPlayer();
-    sendData(cf, allPlayerJson);
+    JSONObject loginJson=login();
+    sendData(cf, loginJson);
+    JSONObject startJson=startGame();
+    sendData(cf, startJson);
+    // JSONObject allPlayerJson=getAllPlayer();
+    // sendData(cf, allPlayerJson);
     //
     cf.getSession().getCloseFuture().awaitUninterruptibly();
     connector.dispose();
@@ -116,6 +121,17 @@ public class Client implements Runnable {
     bodyData.put("nickName", "simple3");
     bodyData.put("sex", false);
     bodyData.put("jobId", JobEnum.JOB_ROBBER.getCode());
+    jsonObject.put("data", bodyData);
+    log.debug("Client Request Data=" + jsonObject.toString());
+    return jsonObject;
+  }
+
+  public JSONObject startGame() {
+    JSONObject jsonObject=new JSONObject();
+    jsonObject.put("type", Constant.REQ);
+    jsonObject.put("id", 0x0011);
+    JSONObject bodyData=new JSONObject();
+    bodyData.put("roleIndex", 0);
     jsonObject.put("data", bodyData);
     log.debug("Client Request Data=" + jsonObject.toString());
     return jsonObject;

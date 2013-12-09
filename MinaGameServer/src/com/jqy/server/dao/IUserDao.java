@@ -22,5 +22,7 @@ public interface IUserDao {
 
   public User selectByUsername(String username);
 
-  public int register(User user);
+  public int create(User user);
+  
+  public void update(User user);
 }

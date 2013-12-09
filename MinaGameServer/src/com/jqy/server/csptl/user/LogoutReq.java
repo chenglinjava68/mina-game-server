@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
+import com.jqy.server.entity.player.Player;
 import com.jqy.server.entity.user.User;
 import com.jqy.server.service.IOnlineService;
 
@@ -54,12 +55,14 @@ public class LogoutReq extends AbsReqProtocol {
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    User user=(User)session.getAttribute("user");
+    User user=(User)session.getAttribute(Constant.USER);
     String username=user.getUsername();
-    log.debug(String.format("username=%s logout!", username));
-    // 逻辑执行
-    onlineService.removeConnected(username);
-    onlineService.removeOnline(username);
+    log.debug(String.format("%s logout!", username));
+    onlineService.removeConnectedUser(user);
+    Player p=onlineService.getPlayerByIoSession(session);
+    if(null != p) {
+      onlineService.removeOnlinePlayer(p);
+    }
     return new LogoutResp(Constant.SUCCESS);
   }
 }

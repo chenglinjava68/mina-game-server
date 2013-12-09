@@ -54,7 +54,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		t_user WHERE id=#{id}
 	</select>
 
-	<select id="login" parameterType="map" resultType="User">
+	<select id="login" parameterType="map" resultMap="userRM">
 		SELECT * FROM
 		t_user WHERE username=#{username} AND password=#{password}
 	</select>

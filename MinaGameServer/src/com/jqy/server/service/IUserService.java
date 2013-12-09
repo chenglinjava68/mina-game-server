@@ -28,4 +28,10 @@ public interface IUserService {
    * @return
    */
   public User selectByUsername(String username);
+
+  /**
+   * 保存用户信息
+   * @param user
+   */
+  public void save(User user);
 }
