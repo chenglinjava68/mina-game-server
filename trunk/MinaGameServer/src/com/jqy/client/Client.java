@@ -22,8 +22,8 @@ public class Client implements Runnable {
     connector=new NioSocketConnector();
     connector.setHandler(new ClientHandler());
     connector.setConnectTimeoutMillis(3000);
-    ConnectFuture cf=connector.connect(new InetSocketAddress("localhost", 9999));
-    // ConnectFuture cf=connector.connect(new InetSocketAddress("172.19.0.176", 9999));
+     ConnectFuture cf=connector.connect(new InetSocketAddress("localhost", 9999));
+//    ConnectFuture cf=connector.connect(new InetSocketAddress("172.19.0.176", 9999));
     cf.awaitUninterruptibly();
     return cf;
   }
@@ -31,7 +31,8 @@ public class Client implements Runnable {
   private void sendData(ConnectFuture cf, JSONObject jsonObject) {
     // 封装bodyData
     byte[] body=jsonObject.toString().getBytes();
-    IoBuffer buffer=IoBuffer.allocate(2 + body.length);
+    IoBuffer buffer=IoBuffer.allocate(2 + 2 + body.length);
+    buffer.putShort((short)body.length);
     buffer.putShort((short)body.length);
     buffer.put(body);
     buffer.flip();
@@ -39,20 +40,28 @@ public class Client implements Runnable {
   }
 
   public static void main(String[] args) {
-    for(int i=0; i < 100; i++) {
+    for(int i=0; i < 1; i++) {
       Client c=new Client();
       Thread t=new Thread(c);
       t.start();
     }
-    // new Client().buf();
+    // System.out.println(new Client().test());
   }
 
-  public void buf() {
+  public String test() {
     String s="{'type':1,'id':7,'data':{}}";
     IoBuffer buf=IoBuffer.allocate(2 + s.getBytes().length);
     buf.putShort((short)s.getBytes().length);
     buf.put(s.getBytes());
     buf.flip();
+    byte[] bytes=buf.array();
+    StringBuffer sb=new StringBuffer();
+    for(int i=0; i < bytes.length; i++) {
+      int v=bytes[i] & 0xFF;
+      String a=Integer.toHexString(v);
+      sb.append(a);
+    }
+    return sb.toString();
   }
 
   public void clientStart() {
