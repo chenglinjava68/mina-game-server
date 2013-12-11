@@ -5,25 +5,23 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="Mapper.User">
 
-	<parameterMap type="User" id="userPM">
-		<parameter property="username" />
-		<parameter property="password" />
-		<parameter property="email" />
-		<parameter property="valid" />
-		<parameter property="regDate" />
-		<parameter property="modDate" />
-	</parameterMap>
-
 	<resultMap type="User" id="userRM">
-		<id property="id" column="id" />
-		<result property="username" column="username" />
-		<result property="password" column="password" />
-		<result property="email" column="email" />
-		<result property="valid" column="valid" />
-		<result property="regDate" column="regDate" />
-		<result property="modDate" column="modDate" />
-		<collection property="players" ofType="Player" column="id"
-			select="Mapper.Player.getPlayerById"></collection>
+		<id property="id" column="u_id" />
+		<result property="username" column="u_username" />
+		<result property="password" column="u_password" />
+		<result property="email" column="u_email" />
+		<result property="valid" column="u_valid" />
+		<result property="regDate" column="u_regDate" />
+		<result property="modDate" column="u_modDate" />
+		<collection property="players" ofType="Player">
+			<id property="id" column="p_id"/>
+			<result property="nickName" column="p_nickName"/>
+			<result property="sex" column="p_sex"/>
+			<result property="level" column="p_level"/>
+			<result property="regDate" column="p_regDate"/>
+			<result property="modDate" column="p_modDate"/>
+		</collection>
+		<!--<collection property="players" resultMap="Mapper.Player.playerRM"></collection>-->
 	</resultMap>
 
 	<insert id="create" parameterType="User" useGeneratedKeys="true">
@@ -44,19 +42,52 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</update>
 
 	<delete id="delete" parameterType="int">
-		DELETE FROM t_user WHERE
-		id=#{id}
+		DELETE FROM t_user WHERE id=#{id}
 	</delete>
 
-	<select id="getUserById" parameterType="int" resultMap="userRM">
-		SELECT *
+	<select id="selectById" parameterType="int" resultMap="userRM">
+		SELECT
+		u.id AS u_id,
+		u.username AS u_username,
+		u.password AS u_password,
+		u.email AS u_email,
+		u.valid AS u_valid,
+		u.regDate AS u_regDate,
+		u.modDate AS u_modDate,
+		p.id AS p_id,
+		p.nickName AS p_nickName,
+		p.sex AS p_sex,
+		p.level AS p_level,
+		p.regDate AS p_regDate,
+		p.modDate AS p_modDate
 		FROM
-		t_user WHERE id=#{id}
+		t_user AS u
+		LEFT JOIN
+		t_player AS p
+		ON u.id=p.fk_user_id
+		WHERE u.id=#{id}
 	</select>
 
 	<select id="login" parameterType="map" resultMap="userRM">
-		SELECT * FROM
-		t_user WHERE username=#{username} AND password=#{password}
+		SELECT
+		u.id AS u_id,
+		u.username AS u_username,
+		u.password AS u_password,
+		u.email AS u_email,
+		u.valid AS u_valid,
+		u.regDate AS u_regDate,
+		u.modDate AS u_modDate,
+		p.id AS p_id,
+		p.nickName AS p_nickName,
+		p.sex AS p_sex,
+		p.level AS p_level,
+		p.regDate AS p_regDate,
+		p.modDate AS p_modDate
+		FROM
+		t_user AS u
+		LEFT JOIN
+		t_player AS p
+		ON u.id=p.fk_user_id WHERE u.username=#{username} AND u.password=#{password}
 	</select>
 
 	<select id="selectByUsername" parameterType="string" resultType="User">

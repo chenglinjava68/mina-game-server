@@ -5,7 +5,7 @@ import com.jqy.server.entity.job.JobEnum;
 
 public interface IJobService {
 
-  public boolean register(Job job);
+  public boolean create(Job job);
 
   public Job selectByType(JobEnum jobenum);
 }

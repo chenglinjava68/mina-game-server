@@ -1,12 +1,14 @@
 package com.jqy.client;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
 
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
-import org.apache.mina.core.buffer.IoBuffer;
+import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.future.ConnectFuture;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 import com.jqy.server.common.Constant;
@@ -33,6 +35,8 @@ public class Client implements Runnable {
     // ssc.setIdleTime(IdleStatus.BOTH_IDLE, 120);
     // connector.getFilterChain().addLast("code", new ProtocolCodecFilter(new
     // ServerProtocolCodecFactory(Charset.forName("utf-8"))));
+    DefaultIoFilterChainBuilder filterChain=connector.getFilterChain();
+    filterChain.addLast("clientCodecFilter", new ProtocolCodecFilter(new ClientProtocolCodecFactory(Charset.forName("utf-8"))));
     connector.setHandler(new ClientHandler());
     connector.setConnectTimeoutMillis(3000);
     ConnectFuture cf=connector.connect(new InetSocketAddress("localhost", 9999));
@@ -42,13 +46,7 @@ public class Client implements Runnable {
   }
 
   public void sendData(ConnectFuture cf, JSONObject jsonObject) {
-    // 封装bodyData
-    byte[] body=jsonObject.toString().getBytes();
-    IoBuffer buffer=IoBuffer.allocate(2 + body.length);
-    buffer.putShort((short)body.length);
-    buffer.put(body);
-    buffer.flip();
-    cf.getSession().write(buffer);
+    cf.getSession().write(jsonObject);
   }
 
   public void end(ConnectFuture cf) {
@@ -63,7 +61,7 @@ public class Client implements Runnable {
     bodyData.put("password", password);
     bodyData.put("email", email);
     jsonObject.put("data", bodyData);
-    log.debug(String.format("[%s]Client Request Data=%s", ptlId, jsonObject.toString()));
+    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
     return jsonObject;
   }
 
@@ -73,7 +71,7 @@ public class Client implements Runnable {
     bodyData.put("username", username);
     bodyData.put("password", password);
     jsonObject.put("data", bodyData);
-    log.debug(String.format("[%s]Client Request Data=%s", ptlId, jsonObject.toString()));
+    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
     return jsonObject;
   }
 
@@ -84,7 +82,7 @@ public class Client implements Runnable {
     bodyData.put("sex", sex);
     bodyData.put("jobId", jobId);
     jsonObject.put("data", bodyData);
-    log.debug(String.format("[%s]Client Request Data=%s", ptlId, jsonObject.toString()));
+    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
     return jsonObject;
   }
 
@@ -93,7 +91,7 @@ public class Client implements Runnable {
     JSONObject bodyData=new JSONObject();
     bodyData.put("roleIndex", roleIndex);
     jsonObject.put("data", bodyData);
-    log.debug(String.format("[%s]Client Request Data=%s", ptlId, jsonObject.toString()));
+    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
     return jsonObject;
   }
 
@@ -101,7 +99,7 @@ public class Client implements Runnable {
     JSONObject jsonObject=getReqJson(ptlId);
     JSONObject bodyData=new JSONObject();
     jsonObject.put("data", bodyData);
-    log.debug(String.format("[%s]Client Request Data=%s", ptlId, jsonObject.toString()));
+    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
     return jsonObject;
   }
 

@@ -52,13 +52,13 @@ CREATE  TABLE IF NOT EXISTS `minagameserver`.`t_player` (
   CONSTRAINT `fk_user_id`
     FOREIGN KEY (`fk_user_id` )
     REFERENCES `minagameserver`.`t_user` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_job_id`
     FOREIGN KEY (`fk_job_id` )
     REFERENCES `minagameserver`.`t_job` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci

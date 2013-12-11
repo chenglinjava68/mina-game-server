@@ -36,4 +36,14 @@ public class IPlayerDaoImpl extends BaseDao implements IPlayerDao {
       session.close();
     }
   }
+
+  @Override
+  public Player selectById(int id) {
+    SqlSession session=getSessionFactory().openSession();
+    try {
+      return session.selectOne("Mapper.Player.selectById", id);
+    } finally {
+      session.close();
+    }
+  }
 }

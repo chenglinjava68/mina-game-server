@@ -42,7 +42,7 @@ public class PlayerListResp extends AbsRespProtocol {
       data.put("size", players.size());
       JSONArray jsonArray=new JSONArray();
       for(Player p: players) {
-        jsonArray.add(JSONObject.fromObject(p, JsonUtil.configJson()));
+        jsonArray.add(JSONObject.fromObject(p, JsonUtil.dateFormatAndIgnoreCycleConfig()));
       }
       data.put("list", jsonArray);
     }

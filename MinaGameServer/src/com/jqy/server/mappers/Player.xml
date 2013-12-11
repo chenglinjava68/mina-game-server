@@ -5,24 +5,31 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="Mapper.Player">
 
-	<parameterMap type="Player" id="playerPM">
-		<parameter property="id"/>
-		<parameter property="nickName"/>
-		<parameter property="sex"/>
-		<parameter property="level"/>
-		<parameter property="regDate"/>
-		<parameter property="modDate"/>
-	</parameterMap>
-	
 	<resultMap type="Player" id="playerRM">
-		<id property="id" column="id"/>
-		<result property="nickName" column="nickName"/>
-		<result property="sex" column="sex"/>
-		<result property="level" column="level"/>
-		<result property="regDate" column="regDate"/>
-		<result property="modDate" column="modDate"/>
-		<association property="job" column="fk_job_id" javaType="Job" select="Mapper.Job.getJobById"></association>
-		<association property="user" column="fk_user_id" javaType="User" select="Mapper.User.getUserById"></association>
+		<id property="id" column="p_id"/>
+		<result property="nickName" column="p_nickName"/>
+		<result property="sex" column="p_sex"/>
+		<result property="level" column="p_level"/>
+		<result property="regDate" column="p_regDate"/>
+		<result property="modDate" column="p_modDate"/>
+		<association property="job" javaType="Job">
+			<id property="id" column="j_id" />
+			<result property="hp" column="j_hp" />
+			<result property="mp" column="j_mp" />
+			<result property="atk" column="j_atk" />
+			<result property="def" column="j_def" />
+			<result property="ms" column="j_ms" />
+			<result property="type" column="j_type"/>
+		</association>
+		<association property="user" javaType="User">
+			<id property="id" column="u_id" />
+			<result property="username" column="u_username" />
+			<result property="password" column="u_password" />
+			<result property="email" column="u_email" />
+			<result property="valid" column="u_valid" />
+			<result property="regDate" column="u_regDate" />
+			<result property="modDate" column="u_modDate" />
+		</association>
 	</resultMap>
 
 	<insert id="create" parameterType="Player" useGeneratedKeys="true">
@@ -41,12 +48,41 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</update>
 
 	<delete id="delete" parameterType="int">
-		DELETE FROM t_player WHERE
-		id=#{id}
+		DELETE FROM t_player WHERE id=#{id}
 	</delete>
 	
-	<select id="getPlayerById" parameterType="int" resultMap="playerRM">
-		SELECT * FROM t_player WHERE id=#{id}
+	<select id="selectById" parameterType="int" resultMap="playerRM">
+		SELECT
+		p.id AS p_id,
+		p.nickName AS p_nickName,
+		p.sex AS p_sex,
+		p.level AS p_level,
+		p.regDate AS p_regDate,
+		p.modDate AS p_modDate,
+		u.id AS u_id,
+		u.username AS u_username,
+		u.password AS u_password,
+		u.email AS u_email,
+		u.valid AS u_valid,
+		u.regDate AS u_regDate,
+		u.modDate AS u_modDate,
+		j.type AS j_type,
+		j.hp AS j_hp,
+		j.mp AS j_mp,
+		j.atk AS j_atk,
+		j.def AS j_def,
+		j.ms AS j_ms,
+		j.regDate AS j_regDate,
+		j.modDate AS j_modDate
+		FROM
+		t_player AS p
+		INNER JOIN
+		t_user AS u
+		ON p.fk_user_id=u.id
+		INNER JOIN
+		t_job AS j
+		ON p.fk_job_id=j.id
+		WHERE p.id=#{id}
 	</select>
 	
 	<select id="selectByNickName" parameterType="string" resultType="Player">
@@ -54,6 +90,35 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="selectAll" resultMap="playerRM">
-		SELECT * FROM t_player
+		SELECT
+		p.id AS p_id,
+		p.nickName AS p_nickName,
+		p.sex AS p_sex,
+		p.level AS p_level,
+		p.regDate AS p_regDate,
+		p.modDate AS p_modDate,
+		u.id AS u_id,
+		u.username AS u_username,
+		u.password AS u_password,
+		u.email AS u_email,
+		u.valid AS u_valid,
+		u.regDate AS u_regDate,
+		u.modDate AS u_modDate,
+		j.type AS j_type,
+		j.hp AS j_hp,
+		j.mp AS j_mp,
+		j.atk AS j_atk,
+		j.def AS j_def,
+		j.ms AS j_ms,
+		j.regDate AS j_regDate,
+		j.modDate AS j_modDate
+		FROM
+		t_player AS p
+		INNER JOIN
+		t_user AS u
+		ON p.fk_user_id=u.id
+		INNER JOIN
+		t_job AS j
+		ON p.fk_job_id=j.id
 	</select>
 </mapper>

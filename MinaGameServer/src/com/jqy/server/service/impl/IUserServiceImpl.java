@@ -20,7 +20,7 @@ public class IUserServiceImpl implements IUserService {
   }
 
   @Override
-  public boolean register(User user) {
+  public boolean create(User user) {
     int status=userDao.create(user);
     return status > 0 ? true : false;
   }
@@ -34,5 +34,11 @@ public class IUserServiceImpl implements IUserService {
   @Override
   public void save(User user) {
     userDao.update(user);
+  }
+
+  @Override
+  public User selectById(int id) {
+    // TODO Auto-generated method stub
+    return userDao.selectById(id);
   }
 }

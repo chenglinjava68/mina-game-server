@@ -1,4 +1,4 @@
-package com.jqy.server.core.codec;
+package com.jqy.client;
 
 import java.nio.charset.Charset;
 
@@ -16,11 +16,11 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
  * @date 2013-9-26 上午11:26:25
  * @Description TODO
  */
-public class ServerProtocolEncoder extends ProtocolEncoderAdapter {
+public class ClientProtocolEncoder extends ProtocolEncoderAdapter {
 
   private Charset charset;
 
-  public ServerProtocolEncoder(Charset charset) {
+  public ClientProtocolEncoder(Charset charset) {
     this.setCharset(charset);
   }
 
