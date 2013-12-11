@@ -25,4 +25,6 @@ public interface IUserDao {
   public int create(User user);
   
   public void update(User user);
+
+  public User selectById(int id);
 }

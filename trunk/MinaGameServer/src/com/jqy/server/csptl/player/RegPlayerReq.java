@@ -102,7 +102,7 @@ public class RegPlayerReq extends AbsReqProtocol {
         log.debug(String.format("Job inited faild!can't found jobId=%s", jobId));
         return new RegPlayerResp(3);// 职业不存在
       }
-      if(playerService.register(player)) {
+      if(playerService.create(player)) {
         user.getPlayers().add(player);
         // user.getPlayers().add(player);
         // userService.save(user);

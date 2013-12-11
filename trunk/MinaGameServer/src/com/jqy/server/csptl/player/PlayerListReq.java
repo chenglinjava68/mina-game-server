@@ -48,6 +48,10 @@ public class PlayerListReq extends AbsReqProtocol {
 
   @Resource
   private IPlayerService playerService;
+  
+
+  // @Resource
+  // private IUserService userService;
 
   @Override
   public void decode(JSONObject data) {
@@ -56,6 +60,8 @@ public class PlayerListReq extends AbsReqProtocol {
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
     log.debug(String.format("player list execute"));
+    // User u=userService.selectById(1);
+    // Player p=playerService.selectById(3);
     List<Player> players=playerService.selectAll();
     return new PlayerListResp(players.size() > 0 ? Constant.SUCCESS : Constant.FAILD, players);
   }

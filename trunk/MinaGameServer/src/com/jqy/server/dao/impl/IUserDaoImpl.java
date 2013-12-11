@@ -45,4 +45,14 @@ public class IUserDaoImpl extends BaseDao implements IUserDao {
   public void update(User user) {
     update("Mapper.User.update", user);
   }
+
+  @Override
+  public User selectById(int id) {
+    SqlSession session=getSessionFactory().openSession();
+    try {
+      return session.selectOne("Mapper.User.selectById", id);
+    } finally {
+      session.close();
+    }
+  }
 }

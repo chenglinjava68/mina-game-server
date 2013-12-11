@@ -18,4 +18,6 @@ public interface IPlayerDao {
   public Player selectByNickName(String nickName);
 
   public List<Player> selectAll();
+
+  public Player selectById(int id);
 }

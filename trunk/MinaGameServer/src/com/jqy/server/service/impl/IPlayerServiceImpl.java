@@ -17,7 +17,7 @@ public class IPlayerServiceImpl implements IPlayerService {
   private IPlayerDao playerDao;
 
   @Override
-  public boolean register(Player player) {
+  public boolean create(Player player) {
     int status=playerDao.register(player);
     return status > 0 ? true : false;
   }
@@ -30,5 +30,11 @@ public class IPlayerServiceImpl implements IPlayerService {
   @Override
   public List<Player> selectAll() {
     return playerDao.selectAll();
+  }
+
+  @Override
+  public Player selectById(int id) {
+    // TODO Auto-generated method stub
+    return playerDao.selectById(id);
   }
 }

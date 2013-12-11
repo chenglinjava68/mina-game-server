@@ -5,24 +5,14 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="Mapper.Job">
 
-	<parameterMap type="Job" id="jobPM">
-		<parameter property="id" />
-		<parameter property="hp" />
-		<parameter property="mp" />
-		<parameter property="atk" />
-		<parameter property="def" />
-		<parameter property="ms" />
-		<parameter property="type" />
-	</parameterMap>
-
 	<resultMap type="Job" id="jobRM">
-		<id property="id" column="id" />
-		<result property="hp" column="hp" />
-		<result property="mp" column="mp" />
-		<result property="atk" column="atk" />
-		<result property="def" column="def" />
-		<result property="ms" column="ms" />
-		<result property="type" column="type"/>
+		<id property="id" column="j_id" />
+		<result property="hp" column="j_hp" />
+		<result property="mp" column="j_mp" />
+		<result property="atk" column="j_atk" />
+		<result property="def" column="j_def" />
+		<result property="ms" column="j_ms" />
+		<result property="type" column="j_type"/>
 	</resultMap>
 
 	<insert id="create" parameterType="Job" useGeneratedKeys="true">

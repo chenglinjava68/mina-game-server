@@ -72,7 +72,7 @@ public class RegUserReq extends AbsReqProtocol {
       user.setUsername(username);
       user.setPassword(password);
       user.setEmail(email);
-      userService.register(user);
+      userService.create(user);
       return new RegUserResp(Constant.SUCCESS);
     } else {
       return new RegUserResp(Constant.FAILD);

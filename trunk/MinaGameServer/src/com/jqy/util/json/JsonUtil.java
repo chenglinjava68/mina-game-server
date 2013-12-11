@@ -3,6 +3,7 @@ package com.jqy.util.json;
 import java.util.Date;
 
 import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 /**
  * Json 工具类
@@ -13,8 +14,21 @@ import net.sf.json.JsonConfig;
  */
 public class JsonUtil {
 
-  public static JsonConfig configJson() {
+  public static JsonConfig dateFormat() {
     JsonConfig jcf=new JsonConfig();
+    jcf.registerJsonValueProcessor(Date.class, new JsonDateValueProcessor());
+    return jcf;
+  }
+
+  public static JsonConfig ignoreCycle() {
+    JsonConfig jcf=new JsonConfig();
+    jcf.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+    return jcf;
+  }
+
+  public static JsonConfig dateFormatAndIgnoreCycleConfig() {
+    JsonConfig jcf=new JsonConfig();
+    jcf.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
     jcf.registerJsonValueProcessor(Date.class, new JsonDateValueProcessor());
     return jcf;
   }

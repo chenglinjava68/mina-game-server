@@ -18,12 +18,10 @@ public class ClientHandler extends IoHandlerAdapter {
 
   @Override
   public void messageReceived(IoSession session, Object message) throws Exception {
-    IoBuffer buf=(IoBuffer)message;
-    int length=buf.getShort();
-    byte[] data=new byte[length];
-    buf.get(data);
+    IoBuffer buffer=(IoBuffer)message;
+    byte[] data=buffer.array();
     String jsonString=new String(data, "utf-8");
-    log.debug("服务器返回结果=" + jsonString);
+    log.debug("服务器返回数据=" + jsonString);
   }
 
   @Override

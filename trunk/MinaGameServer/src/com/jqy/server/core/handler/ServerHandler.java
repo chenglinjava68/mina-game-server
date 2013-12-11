@@ -97,7 +97,7 @@ public class ServerHandler extends IoHandlerAdapter implements InitializingBean 
 
   @Override
   public void messageSent(IoSession session, Object message) throws Exception {
-    log.debug("messageSent");
+    log.debug("messageSent" + ((JSONObject)message).toString());
   }
 
   @Override

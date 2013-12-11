@@ -23,7 +23,7 @@ public class IJobServiceImpl implements IJobService, InitializingBean {
   private IJobDao jobDao;
 
   @Override
-  public boolean register(Job job) {
+  public boolean create(Job job) {
     int status=jobDao.register(job);
     return status > 0 ? true : false;
   }
