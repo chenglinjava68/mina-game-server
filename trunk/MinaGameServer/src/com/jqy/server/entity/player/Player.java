@@ -20,7 +20,7 @@ public class Player {
 
   private boolean sex;// 性别
 
-  private int level;// 等级
+  private int level=1;// 等级
 
   private Date regDate;// 注册日期
 

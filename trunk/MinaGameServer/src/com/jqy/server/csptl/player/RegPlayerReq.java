@@ -20,6 +20,7 @@ import com.jqy.server.entity.player.Player;
 import com.jqy.server.entity.user.User;
 import com.jqy.server.service.IJobService;
 import com.jqy.server.service.IPlayerService;
+import com.jqy.server.service.IUserService;
 
 /**
  * 注册玩家 请求协议
@@ -53,6 +54,10 @@ public class RegPlayerReq extends AbsReqProtocol {
   @Resource
   private IPlayerService playerService;
 
+  @SuppressWarnings("unused")
+  @Resource
+  private IUserService userService;
+
   @Resource
   private IJobService jobService;
 
@@ -71,32 +76,39 @@ public class RegPlayerReq extends AbsReqProtocol {
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    int status=0;
-    log.debug(String.format("nickName=%s,sex=%s", nickName, sex));
+    log.debug(String.format("regPlayer execute,nickName=%s,sex=%s,jobId=%s", nickName, sex, jobId));
     Player player=playerService.selectByNickName(nickName);
     if(null != player) {
-      log.debug(String.format("nickName=%s user exist!", nickName));
-      status=2;
+      log.debug(String.format("nickName=%s exist!", nickName));
+      return new RegPlayerResp(2);// 用户名已存在
     } else {
       player=new Player();
+      player.setRegDate(new Date());
       player.setNickName(nickName);
       player.setSex(sex);
-      player.setRegDate(new Date());
-      User user=(User)session.getAttribute(Constant.USER);
+      // user
+      User user=getUser();
       if(null != user) {
         player.setUser(user);
+      } else {
+        log.error(String.format("严重错误"));
+        return new RegPlayerResp(9999);// 严重错误
       }
+      // job
       Job job=jobService.selectByType(JobEnum.getByCode(jobId));
       if(null != job) {
         player.setJob(job);
       } else {
         log.debug(String.format("Job inited faild!can't found jobId=%s", jobId));
-        status=3;
+        return new RegPlayerResp(3);// 职业不存在
       }
       if(playerService.register(player)) {
-        status=1;
+        user.getPlayers().add(player);
+        // user.getPlayers().add(player);
+        // userService.save(user);
+        return new RegPlayerResp(1);// 注册成功
       }
     }
-    return new RegPlayerResp(status);
+    return new RegPlayerResp(0);// 失败
   }
 }

@@ -22,7 +22,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<result property="valid" column="valid" />
 		<result property="regDate" column="regDate" />
 		<result property="modDate" column="modDate" />
-		<collection property="players" column="player_id"
+		<collection property="players" ofType="Player" column="id"
 			select="Mapper.Player.getPlayerById"></collection>
 	</resultMap>
 

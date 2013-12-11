@@ -19,12 +19,18 @@ import org.springframework.stereotype.Component;
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
+import com.jqy.server.entity.player.Player;
+import com.jqy.server.entity.user.User;
+import com.jqy.server.service.IOnlineService;
 import com.jqy.util.spring.BeanUtil;
 
 @Component
 public class ServerHandler extends IoHandlerAdapter implements InitializingBean {
 
   private Logger log=Logger.getLogger(this.getClass());
+
+  @Resource
+  private IOnlineService onlineService;
 
   @Resource
   private List<AbsReqProtocol> reqProtocols;
@@ -53,6 +59,7 @@ public class ServerHandler extends IoHandlerAdapter implements InitializingBean 
         // 获取相应协议处理类的bean
         AbsReqProtocol req=BeanUtil.makeNewReqProtocolHandler(protocolName);
         if(req != null) {
+          setUserAndPlayer(session, req);
           JSONObject reqData=jsonObject.getJSONObject("data");
           req.decode(reqData);
           AbsRespProtocol resp=req.execute(session, req);
@@ -71,6 +78,21 @@ public class ServerHandler extends IoHandlerAdapter implements InitializingBean 
       log.debug("非请求类型协议");
     }
     // JSONObject jsonObject2=jsonObject.getJSONObject("data");
+  }
+
+  private void setUserAndPlayer(IoSession session, AbsReqProtocol req) {
+    User user=onlineService.getUserByIoSession(session);
+    if(null != user) {
+      req.setUser(user);
+      Player player=onlineService.getPlayerByIoSession(session);
+      if(null != player) {
+        req.setPlayer(player);
+      } else {
+        log.error(String.format("you can't online"));
+      }
+    } else {
+      log.error(String.format("you can't login"));
+    }
   }
 
   @Override

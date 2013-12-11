@@ -55,6 +55,7 @@ public class LogoutReq extends AbsReqProtocol {
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
+    log.debug(String.format("logout execute"));
     User user=(User)session.getAttribute(Constant.USER);
     String username=user.getUsername();
     log.debug(String.format("%s logout!", username));

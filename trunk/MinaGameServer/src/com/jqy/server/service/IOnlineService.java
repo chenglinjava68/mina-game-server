@@ -1,7 +1,6 @@
 package com.jqy.server.service;
 
 import java.util.Map;
-import java.util.Queue;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -10,19 +9,19 @@ import com.jqy.server.entity.user.User;
 
 public interface IOnlineService {
 
-  public Queue<Player> getOnlinePlayers();
+  public Map<IoSession, Player> getOnlinePlayers();
 
   public void setOnlinePlayer(IoSession session, Player player);
 
   public void removeOnlinePlayer(Player player);
 
-  public Map<User, IoSession> getConnectedUsers();
+  public Player getPlayerByIoSession(IoSession session);
 
-  public void setConnectedUser(User user, IoSession session);
+  public Map<IoSession, User> getConnectedUsers();
+
+  public void setConnectedUser(IoSession session, User user);
 
   public void removeConnectedUser(User user);
 
-  public IoSession getIoSessionByUser(User user);
-
-  public Player getPlayerByIoSession(IoSession session);
+  public User getUserByIoSession(IoSession session);
 }

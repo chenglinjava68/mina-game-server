@@ -1,6 +1,6 @@
 package com.jqy.server.manager;
 
-import java.util.Queue;
+import java.util.Collection;
 
 import javax.annotation.Resource;
 
@@ -31,7 +31,7 @@ public class HeartbeatManager implements Runnable {
 
   @Override
   public void run() {
-    Queue<Player> list=onlineService.getOnlinePlayers();
+    Collection<Player> list=onlineService.getOnlinePlayers().values();
     for(Player p: list) {
       p.heartbeat();// 心跳
       checkPlayerIsAlive(p);
