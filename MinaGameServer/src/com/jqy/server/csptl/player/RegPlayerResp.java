@@ -23,9 +23,6 @@ public class RegPlayerResp extends AbsRespProtocol {
 
   private int result;
 
-  public RegPlayerResp() {
-  }
-
   public RegPlayerResp(int result) {
     this.result=result;
   }

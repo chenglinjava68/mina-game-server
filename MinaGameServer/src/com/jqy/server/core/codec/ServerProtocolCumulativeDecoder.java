@@ -18,7 +18,7 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
  * @Description TODO
  */
 public class ServerProtocolCumulativeDecoder extends CumulativeProtocolDecoder {
-  
+
   private Logger log=Logger.getLogger(this.getClass());
 
   private Charset charset;
@@ -36,7 +36,7 @@ public class ServerProtocolCumulativeDecoder extends CumulativeProtocolDecoder {
    */
   @Override
   protected boolean doDecode(IoSession session, IoBuffer buf, ProtocolDecoderOutput out) throws Exception {
-    if(buf.remaining() > 0) {// 有数据，先读取报头
+    if(buf.remaining() > 2) {// 有数据，先读取报头
       buf.mark();// 做标记，以便数据不完整时恢复
       short bodyLength=buf.getShort();// 取报头(报体长度)
       if(buf.remaining() < bodyLength) {// 不完整的数据包(报体长度不完整,需拼凑完整数据)

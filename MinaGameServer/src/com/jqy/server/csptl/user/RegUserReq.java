@@ -64,7 +64,7 @@ public class RegUserReq extends AbsReqProtocol {
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    log.debug(String.format("username=%s,password=%s,email=%s", username, password, email));
+    log.debug(String.format("regUser execute,username=%s,password=%s,email=%s", username, password, email));
     User user=userService.selectByUsername(username);
     if(null == user) {
       user=new User();

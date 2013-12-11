@@ -10,7 +10,6 @@ import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 import com.jqy.server.common.Constant;
-import com.jqy.server.entity.job.JobEnum;
 
 public class Client implements Runnable {
 
@@ -18,7 +17,16 @@ public class Client implements Runnable {
 
   private NioSocketConnector connector;
 
-  private ConnectFuture getCF() {
+  public Client() {
+  }
+
+  public Client(int i) {
+    this.setI(i);
+  }
+
+  private int i=0;
+
+  public ConnectFuture getCF() {
     connector=new NioSocketConnector();
     // SocketSessionConfig ssc=connector.getSessionConfig();
     // 空闲
@@ -33,7 +41,7 @@ public class Client implements Runnable {
     return cf;
   }
 
-  private void sendData(ConnectFuture cf, JSONObject jsonObject) {
+  public void sendData(ConnectFuture cf, JSONObject jsonObject) {
     // 封装bodyData
     byte[] body=jsonObject.toString().getBytes();
     IoBuffer buffer=IoBuffer.allocate(2 + body.length);
@@ -43,112 +51,76 @@ public class Client implements Runnable {
     cf.getSession().write(buffer);
   }
 
-  public static void main(String[] args) {
-    for(int i=0; i < 1; i++) {
-      Client c=new Client();
-      Thread t=new Thread(c);
-      t.start();
-    }
-    // System.out.println(new Client().test());
-  }
-
-  public String test() {
-    String s="{'type':1,'id':7,'data':{}}";
-    IoBuffer buf=IoBuffer.allocate(2 + s.getBytes().length);
-    buf.putShort((short)s.getBytes().length);
-    buf.put(s.getBytes());
-    buf.flip();
-    byte[] bytes=buf.array();
-    StringBuffer sb=new StringBuffer();
-    for(int i=0; i < bytes.length; i++) {
-      int v=bytes[i] & 0xFF;
-      String a=Integer.toHexString(v);
-      sb.append(a);
-    }
-    return sb.toString();
-  }
-
-  public void clientStart() {
-    ConnectFuture cf=getCF();
-    // // 注册用户
-    // JSONObject regUserJson=regUser();
-    // sendData(cf, regUserJson);
-    // // 登陆
-    // // 创建玩家
-    // JSONObject regPlayerJson=regPlayer();
-    // sendData(cf, regPlayerJson);
-    JSONObject loginJson=login();
-    sendData(cf, loginJson);
-    JSONObject startJson=startGame();
-    sendData(cf, startJson);
-    // JSONObject allPlayerJson=getAllPlayer();
-    // sendData(cf, allPlayerJson);
-    //
+  public void end(ConnectFuture cf) {
     cf.getSession().getCloseFuture().awaitUninterruptibly();
     connector.dispose();
   }
 
-  public JSONObject regUser() {
-    JSONObject jsonObject=new JSONObject();
-    jsonObject.put("type", Constant.REQ);
-    jsonObject.put("id", 0x0001);
+  public JSONObject regUser(int ptlId, String username, String password, String email) {
+    JSONObject jsonObject=getReqJson(ptlId);
     JSONObject bodyData=new JSONObject();
-    bodyData.put("username", "jiangqy1");
-    bodyData.put("password", "jiangqy1");
-    bodyData.put("email", "jiangqy1@qq.com");
+    bodyData.put("username", username);
+    bodyData.put("password", password);
+    bodyData.put("email", email);
     jsonObject.put("data", bodyData);
-    log.debug("Client Request Data=" + jsonObject.toString());
+    log.debug(String.format("[%s]Client Request Data=%s", ptlId, jsonObject.toString()));
     return jsonObject;
   }
 
-  public JSONObject login() {
-    JSONObject jsonObject=new JSONObject();
-    jsonObject.put("type", Constant.REQ);
-    jsonObject.put("id", 0x0003);
+  public JSONObject login(int ptlId, String username, String password) {
+    JSONObject jsonObject=getReqJson(ptlId);
     JSONObject bodyData=new JSONObject();
-    bodyData.put("username", "jiangqy1");
-    bodyData.put("password", "jiangqy1");
+    bodyData.put("username", username);
+    bodyData.put("password", password);
     jsonObject.put("data", bodyData);
-    log.debug("Client Request Data=" + jsonObject.toString());
+    log.debug(String.format("[%s]Client Request Data=%s", ptlId, jsonObject.toString()));
     return jsonObject;
   }
 
-  public JSONObject regPlayer() {
-    JSONObject jsonObject=new JSONObject();
-    jsonObject.put("type", Constant.REQ);
-    jsonObject.put("id", 0x0005);
+  public JSONObject regPlayer(int ptlId, String nickName, boolean sex, int jobId) {
+    JSONObject jsonObject=getReqJson(ptlId);
     JSONObject bodyData=new JSONObject();
-    bodyData.put("nickName", "simple3");
-    bodyData.put("sex", false);
-    bodyData.put("jobId", JobEnum.JOB_ROBBER.getCode());
+    bodyData.put("nickName", nickName);
+    bodyData.put("sex", sex);
+    bodyData.put("jobId", jobId);
     jsonObject.put("data", bodyData);
-    log.debug("Client Request Data=" + jsonObject.toString());
+    log.debug(String.format("[%s]Client Request Data=%s", ptlId, jsonObject.toString()));
     return jsonObject;
   }
 
-  public JSONObject startGame() {
-    JSONObject jsonObject=new JSONObject();
-    jsonObject.put("type", Constant.REQ);
-    jsonObject.put("id", 0x0011);
+  public JSONObject startGame(int ptlId, int roleIndex) {
+    JSONObject jsonObject=getReqJson(ptlId);
     JSONObject bodyData=new JSONObject();
-    bodyData.put("roleIndex", 0);
+    bodyData.put("roleIndex", roleIndex);
     jsonObject.put("data", bodyData);
-    log.debug("Client Request Data=" + jsonObject.toString());
+    log.debug(String.format("[%s]Client Request Data=%s", ptlId, jsonObject.toString()));
     return jsonObject;
   }
 
-  public JSONObject getAllPlayer() {
-    JSONObject jsonObject=new JSONObject();
-    jsonObject.put("type", Constant.REQ);
-    jsonObject.put("id", 0x0007);
+  public JSONObject getAllPlayer(int ptlId) {
+    JSONObject jsonObject=getReqJson(ptlId);
     JSONObject bodyData=new JSONObject();
     jsonObject.put("data", bodyData);
-    log.debug("Client Request Data=" + jsonObject.toString());
+    log.debug(String.format("[%s]Client Request Data=%s", ptlId, jsonObject.toString()));
     return jsonObject;
   }
 
   @Override
   public void run() {
-    clientStart();
+  }
+
+  private JSONObject getReqJson(int ptlId) {
+    JSONObject jsonObject=new JSONObject();
+    jsonObject.put("type", Constant.REQ);
+    jsonObject.put("id", ptlId);
+    return jsonObject;
+  }
+
+  public void setI(int i) {
+    this.i=i;
+  }
+
+  public int getI() {
+    return i;
   }
 }

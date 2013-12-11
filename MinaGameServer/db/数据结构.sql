@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS t_job;
 /*用户*/
 CREATE  TABLE IF NOT EXISTS `minagameserver`.`t_user` (
   `id` INT NOT NULL AUTO_INCREMENT ,
-  `username` VARCHAR(10) NOT NULL COMMENT '用户名' ,
+  `username` VARCHAR(20) NOT NULL COMMENT '用户名' ,
   `password` VARCHAR(20) NOT NULL COMMENT '密码' ,
   `email` VARCHAR(45) NULL ,
   `valid` BIT NOT NULL COMMENT '状态' ,
@@ -41,6 +41,7 @@ CREATE  TABLE IF NOT EXISTS `minagameserver`.`t_player` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `nickName` VARCHAR(10) NOT NULL ,
   `sex` BIT NOT NULL ,
+  `level` INT NOT NULL ,
   `regDate` DATETIME NOT NULL ,
   `modDate` DATETIME NULL ,
   `fk_user_id` INT NOT NULL ,

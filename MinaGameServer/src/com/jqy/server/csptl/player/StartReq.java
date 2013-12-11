@@ -60,9 +60,9 @@ public class StartReq extends AbsReqProtocol {
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
     log.debug(String.format("start execute"));
-    User u=(User)session.getAttribute(Constant.USER);
+    User u=getUser();
     List<Player> players=u.getPlayers();
-    if(players.size() > 10) {
+    if(players.size() > 0) {
       Player player=players.get(roleIndex);
       if(null != player) {
         session.setAttribute(Constant.PLAYER, player);

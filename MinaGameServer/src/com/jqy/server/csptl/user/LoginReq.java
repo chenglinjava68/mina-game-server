@@ -63,11 +63,10 @@ public class LoginReq extends AbsReqProtocol {
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    log.debug(String.format("login execute"));
+    log.debug(String.format("login execute,username=%s,password=%s", username, password));
     User user=userService.login(username, password);
     if(null != user) {
-      session.setAttribute(Constant.USER, user);
-      onlineService.setConnectedUser(user, session);
+      onlineService.setConnectedUser(session, user);
     }
     return new LoginResp(null != user ? Constant.SUCCESS : Constant.FAILD);
   }

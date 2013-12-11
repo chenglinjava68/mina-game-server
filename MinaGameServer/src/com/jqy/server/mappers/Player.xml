@@ -9,6 +9,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<parameter property="id"/>
 		<parameter property="nickName"/>
 		<parameter property="sex"/>
+		<parameter property="level"/>
 		<parameter property="regDate"/>
 		<parameter property="modDate"/>
 	</parameterMap>
@@ -17,6 +18,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<id property="id" column="id"/>
 		<result property="nickName" column="nickName"/>
 		<result property="sex" column="sex"/>
+		<result property="level" column="level"/>
 		<result property="regDate" column="regDate"/>
 		<result property="modDate" column="modDate"/>
 		<association property="job" column="fk_job_id" javaType="Job" select="Mapper.Job.getJobById"></association>
@@ -24,14 +26,15 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<insert id="create" parameterType="Player" useGeneratedKeys="true">
-		INSERT INTO t_player(nickName,sex,regDate,modDate,fk_job_id,fk_user_id) 
-		VALUES(#{nickName},#{sex},#{regDate},#{modDate},#{job.id},#{user.id})
+		INSERT INTO t_player(nickName,sex,level,regDate,modDate,fk_job_id,fk_user_id) 
+		VALUES(#{nickName},#{sex},#{level},#{regDate},#{modDate},#{job.id},#{user.id})
 	</insert>
 	
 	<update id="update" parameterType="Player">
 		UPDATE t_player SET
 		nickName=#{nickName},
 		sex=#{sex},
+		level=#{level},
 		regDate=#{regDate},
 		modDate=#{modDate}
 		WHERE id=#{id};

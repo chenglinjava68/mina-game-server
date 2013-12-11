@@ -9,7 +9,15 @@ package com.jqy.server.core.protocol;
  */
 public interface IProtocol {
 
+  /**
+   * 获取协议类型
+   * @return
+   */
   public byte getProtocolType();
 
+  /**
+   * 获取协议编号
+   * @return
+   */
   public short getProtocolId();
 }
