@@ -121,4 +121,12 @@ public class Client implements Runnable {
   public int getI() {
     return i;
   }
+
+  public JSONObject hearbeat(int ptlId) {
+    JSONObject jsonObject=getReqJson(ptlId);
+    JSONObject bodyData=new JSONObject();
+    jsonObject.put("data", bodyData);
+    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
+    return jsonObject;
+  }
 }
