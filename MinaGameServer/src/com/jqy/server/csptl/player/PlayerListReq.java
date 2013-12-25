@@ -48,11 +48,9 @@ public class PlayerListReq extends AbsReqProtocol {
 
   @Resource
   private IPlayerService playerService;
-  
 
   // @Resource
   // private IUserService userService;
-
   @Override
   public void decode(JSONObject data) {
   }
@@ -64,5 +62,12 @@ public class PlayerListReq extends AbsReqProtocol {
     // Player p=playerService.selectById(3);
     List<Player> players=playerService.selectAll();
     return new PlayerListResp(players.size() > 0 ? Constant.SUCCESS : Constant.FAILD, players);
+  }
+
+  public static void main(String[] args) {
+    int day=60 * 60 * 24;
+    for(int i=1; i < 10; i++) {
+      System.out.println(i + "=" + day * (i * 7));
+    }
   }
 }

@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.jqy.client.Client;
 
-public class ClientTest {
+public class ClientTest implements Runnable {
 
   public Client client=new Client();
 
@@ -31,12 +31,13 @@ public class ClientTest {
 
   @Before
   public void setUp() throws Exception {
+    int random=(int)(Math.random() * 100);
     System.out.println("start");
     cf=client.getCF();
-    username="jiangqianyuan2";
-    password="jiangqianyuan2";
+    username="jiangqianyuan" + random;
+    password="jiangqianyuan" + random;
     email="jiangqianyuan2@qq.com";
-    nickName="jqy2";
+    nickName="jqy" + random;
     sex=true;
     jobId=2;
     roleIndex=0;
@@ -48,7 +49,15 @@ public class ClientTest {
     testLogin();
     testRegPlayer();
     testStartGame();
-    testGetAllPlayer();
+    while(true) {
+      try {
+        Thread.sleep(60 * 1000);
+        testHearbeat();
+        testGetAllPlayer();
+      } catch(InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   public void testRegUser() {
@@ -76,9 +85,32 @@ public class ClientTest {
     client.sendData(cf, allPlayerJson);
   }
 
+  public void testHearbeat() {
+    JSONObject hearbeat=client.hearbeat(0x1001);
+    client.sendData(cf, hearbeat);
+  }
+
   @After
   public void setAfter() {
     System.out.println("end");
     client.end(cf);
+  }
+
+  public static void main(String[] args) {
+    for(int i=0; i < 1; i++) {
+      Thread t=new Thread(new ClientTest());
+      t.start();
+    }
+  }
+
+  @Override
+  public void run() {
+    try {
+      setUp();
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+    test();
+    setAfter();
   }
 }
