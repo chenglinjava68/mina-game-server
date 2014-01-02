@@ -1,14 +1,14 @@
-package com.jqy.server.csptl.user;
+package com.jqy.server.csptl.chat;
 
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.MyBuffer;
 import com.jqy.server.core.protocol.AbsRespProtocol;
 
-public class RegUserResp extends AbsRespProtocol {
+public class ChatResp extends AbsRespProtocol {
 
   private static final byte TYPE=Constant.RESP;
 
-  private static final short ID=0x0002;
+  private static final short ID=0x0099;
 
   @Override
   public short getProtocolId() {
@@ -22,7 +22,10 @@ public class RegUserResp extends AbsRespProtocol {
 
   private byte result;
 
-  public RegUserResp(byte result) {
+  public ChatResp() {
+  }
+
+  public ChatResp(byte result) {
     this.result=result;
   }
 

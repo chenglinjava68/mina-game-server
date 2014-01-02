@@ -1,4 +1,4 @@
-package com.jqy.client;
+package com.jqy.server.core.codec;
 
 import java.nio.charset.Charset;
 
@@ -12,19 +12,19 @@ import com.jqy.server.core.MyBuffer;
 import com.jqy.server.core.ServerConfig;
 
 /**
- * 编码器
+ * 编码器 BYTE模式
  * 
  * @author Simple
  * @date 2013-9-26 上午11:26:25
  * @Description TODO
  */
-public class ClientProtocolEncoder extends ProtocolEncoderAdapter {
+public class ServerProtocolEncoderBYTE extends ProtocolEncoderAdapter {
 
   private Logger log=Logger.getLogger(this.getClass());
 
   private Charset charset;
 
-  public ClientProtocolEncoder(Charset charset) {
+  public ServerProtocolEncoderBYTE(Charset charset) {
     this.setCharset(charset);
   }
 

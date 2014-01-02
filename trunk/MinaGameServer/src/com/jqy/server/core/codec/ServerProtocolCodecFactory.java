@@ -16,13 +16,13 @@ import org.apache.mina.filter.codec.ProtocolEncoder;
  */
 public class ServerProtocolCodecFactory implements ProtocolCodecFactory {
 
-  private final ServerProtocolCumulativeDecoder serverProtocolDecoder;
+  private final ServerProtocolCumulativeDecoderBYTE serverProtocolDecoder;
 
-  private final ServerProtocolEncoder serverProtocolEncoder;
+  private final ServerProtocolEncoderBYTE serverProtocolEncoder;
 
   public ServerProtocolCodecFactory(Charset charset) {
-    this.serverProtocolDecoder=new ServerProtocolCumulativeDecoder(charset);
-    this.serverProtocolEncoder=new ServerProtocolEncoder(charset);
+    this.serverProtocolDecoder=new ServerProtocolCumulativeDecoderBYTE(charset);
+    this.serverProtocolEncoder=new ServerProtocolEncoderBYTE(charset);
   }
 
   public ProtocolDecoder getDecoder(IoSession arg0) throws Exception {

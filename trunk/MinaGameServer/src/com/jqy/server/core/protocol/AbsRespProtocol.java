@@ -1,5 +1,7 @@
 package com.jqy.server.core.protocol;
 
+import com.jqy.server.core.MyBuffer;
+
 import net.sf.json.JSONObject;
 
 public abstract class AbsRespProtocol implements IProtocol {
@@ -13,5 +15,9 @@ public abstract class AbsRespProtocol implements IProtocol {
   }
 
   // 编码
-  public abstract void encode(JSONObject data);
+  public void encode(JSONObject data){
+    // 使用JSON模式的话，此方法改为abstract
+  }
+  
+  public abstract void encode(MyBuffer buf);
 }

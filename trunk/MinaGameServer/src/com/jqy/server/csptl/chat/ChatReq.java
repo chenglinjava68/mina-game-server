@@ -1,6 +1,4 @@
-package com.jqy.server.csptl.player;
-
-import javax.annotation.Resource;
+package com.jqy.server.csptl.chat;
 
 import org.apache.log4j.Logger;
 import org.apache.mina.core.session.IoSession;
@@ -11,11 +9,9 @@ import com.jqy.server.common.Constant;
 import com.jqy.server.core.MyBuffer;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
-import com.jqy.server.entity.player.Player;
-import com.jqy.server.service.IOnlineService;
 
 /**
- * 心跳 请求协议
+ * 聊天 请求协议
  * 
  * 此类协议都要使用原型模式
  * 
@@ -25,13 +21,13 @@ import com.jqy.server.service.IOnlineService;
  */
 @Component
 @Scope("prototype")
-public class HeartbeatReq extends AbsReqProtocol {
+public class ChatReq extends AbsReqProtocol {
 
   private Logger log=Logger.getLogger(this.getClass());
 
   private static final byte TYPE=Constant.REQ;
 
-  private static final short ID=0x1001;
+  private static final short ID=0x0098;
 
   @Override
   public short getProtocolId() {
@@ -43,21 +39,45 @@ public class HeartbeatReq extends AbsReqProtocol {
     return TYPE;
   }
 
-  @Resource
-  private IOnlineService onlineService;
+  @SuppressWarnings("unused")
+  private byte param1;
+
+  @SuppressWarnings("unused")
+  private short param2;
+
+  @SuppressWarnings("unused")
+  private int param3;
+
+  @SuppressWarnings("unused")
+  private long param4;
+
+  @SuppressWarnings("unused")
+  private float param5;
+
+  @SuppressWarnings("unused")
+  private double param6;
+
+  @SuppressWarnings("unused")
+  private String param7;
 
   @Override
   public void decode(MyBuffer buf) {
+    // 数据解码
+    param1=buf.get();
+    param2=buf.getShort();
+    param3=buf.getInt();
+    param4=buf.getLong();
+    param5=buf.getFloat();
+    param6=buf.getDouble();
+    param7=buf.getString();
   }
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    log.debug(String.format("heartbeat execute %s", "1"));
-    Player p=onlineService.getPlayerByIoSession(session);
-    if(null != p) {
-      p.set_idleTime(0);
-      p.set_online(true);
-    }
-    return new HeartbeatResp();
+    log.debug(String.format("demo execute %s", "1"));
+    // ...
+    // 执行业务逻辑
+    // ...
+    return new ChatResp();
   }
 }

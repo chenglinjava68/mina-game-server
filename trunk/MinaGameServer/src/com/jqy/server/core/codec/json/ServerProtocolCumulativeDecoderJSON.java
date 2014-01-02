@@ -1,4 +1,4 @@
-package com.jqy.server.core.codec;
+package com.jqy.server.core.codec.json;
 
 import java.nio.charset.Charset;
 
@@ -9,7 +9,7 @@ import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
 /**
- * 服务器协议 累积型解码器
+ * 累积型解码器 JSON模式
  * 
  * 主要解决 粘包，断包问题
  * 
@@ -17,13 +17,13 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
  * @date 2013-12-6 上午10:40:05
  * @Description TODO
  */
-public class ServerProtocolCumulativeDecoder extends CumulativeProtocolDecoder {
+public class ServerProtocolCumulativeDecoderJSON extends CumulativeProtocolDecoder {
 
   private Logger log=Logger.getLogger(this.getClass());
 
   private Charset charset;
 
-  public ServerProtocolCumulativeDecoder(Charset charset) {
+  public ServerProtocolCumulativeDecoderJSON(Charset charset) {
     this.charset=charset;
   }
 

@@ -1,4 +1,4 @@
-package com.jqy.server.core.handler;
+package com.jqy.server.core.handler.json;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +14,6 @@ import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Component;
 
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.protocol.AbsReqProtocol;
@@ -24,8 +23,8 @@ import com.jqy.server.entity.user.User;
 import com.jqy.server.service.IOnlineService;
 import com.jqy.util.spring.BeanUtil;
 
-@Component
-public class ServerHandler extends IoHandlerAdapter implements InitializingBean {
+// @Component
+public class ServerHandlerJSON extends IoHandlerAdapter implements InitializingBean {
 
   private Logger log=Logger.getLogger(this.getClass());
 

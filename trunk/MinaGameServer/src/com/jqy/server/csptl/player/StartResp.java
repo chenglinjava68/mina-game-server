@@ -1,8 +1,7 @@
 package com.jqy.server.csptl.player;
 
-import net.sf.json.JSONObject;
-
 import com.jqy.server.common.Constant;
+import com.jqy.server.core.MyBuffer;
 import com.jqy.server.core.protocol.AbsRespProtocol;
 
 public class StartResp extends AbsRespProtocol {
@@ -21,17 +20,17 @@ public class StartResp extends AbsRespProtocol {
     return TYPE;
   }
 
-  private int result;
+  private byte result;
 
   public StartResp() {
   }
 
-  public StartResp(int result) {
+  public StartResp(byte result) {
     this.result=result;
   }
 
   @Override
-  public void encode(JSONObject data) {
-    data.put("result", result);
+  public void encode(MyBuffer buf) {
+    buf.put(result);
   }
 }
