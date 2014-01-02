@@ -1,17 +1,26 @@
-客户端与服务器之间使用JSON格式的数据进行通讯
-
 ---------------------------------------------------------------------
-【使用自定义协议格式】
-协议格式：报头+报体
+1、JSON模式
+【协议格式】报头+报体
 	报头		short		(2)					报体长度
 	报体		byte[]		(长度由short决定)	具体数据
 	
-	报体格式：
+	[报体格式]
 		type	协议类型
 		id		协议编号
 		data[]	具体数据
 		
-	报体内容示例:
+	[报体内容示例]
 		1、{type:协议类型,id:协议编号,data:[{name:xxx,age:xxx},{name:zzz,age:zzz}]}
 		2、{type:协议类型,id:协议编号,data:[username:xxx,passwrod:xxx]}
 		3、{type:协议类型,id:协议编号,data:[username:xxx,passwrod:xxx,users:[{name:xxx,age:xxx},{name:zzz,age:zzz}]]}
+		
+---------------------------------------------------------------------		
+2、字节模式
+原因:使用json在解析效率上会有一点影响,不大喜欢json模式,json在解析中出现循环嵌套等问题
+【协议格式】报头+报体
+	报头 
+		协议类型		byte	1		请求/响应/心跳/其他
+		协议编号		short	2		0x0001/0x0002
+		报体长度		int		4		0-2147483647
+	报体
+		具体数据		二进制形式(byte/short/int/long/float/double/string)

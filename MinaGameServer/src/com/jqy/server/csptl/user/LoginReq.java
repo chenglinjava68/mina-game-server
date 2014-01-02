@@ -2,14 +2,13 @@ package com.jqy.server.csptl.user;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.apache.mina.core.session.IoSession;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.jqy.server.common.Constant;
+import com.jqy.server.core.MyBuffer;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
 import com.jqy.server.entity.user.User;
@@ -56,9 +55,9 @@ public class LoginReq extends AbsReqProtocol {
   private String password;
 
   @Override
-  public void decode(JSONObject data) {
-    username=data.getString("username");
-    password=data.getString("password");
+  public void decode(MyBuffer buf) {
+    username=buf.getString();
+    password=buf.getString();
   }
 
   @Override

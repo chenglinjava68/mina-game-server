@@ -1,4 +1,4 @@
-package com.jqy.client;
+package com.jqy.server.core.codec;
 
 import java.nio.charset.Charset;
 
@@ -12,7 +12,7 @@ import com.jqy.server.core.MyBuffer;
 import com.jqy.server.core.ServerConfig;
 
 /**
- * 服务器协议 累积型解码器
+ * 累积型解码器 BYTE模式
  * 
  * 主要解决 粘包，断包问题
  * 
@@ -20,13 +20,13 @@ import com.jqy.server.core.ServerConfig;
  * @date 2013-12-6 上午10:40:05
  * @Description TODO
  */
-public class ClientProtocolCumulativeDecoder extends CumulativeProtocolDecoder {
+public class ServerProtocolCumulativeDecoderBYTE extends CumulativeProtocolDecoder {
 
   private Logger log=Logger.getLogger(this.getClass());
 
   private Charset charset;
 
-  public ClientProtocolCumulativeDecoder(Charset charset) {
+  public ServerProtocolCumulativeDecoderBYTE(Charset charset) {
     this.charset=charset;
   }
 

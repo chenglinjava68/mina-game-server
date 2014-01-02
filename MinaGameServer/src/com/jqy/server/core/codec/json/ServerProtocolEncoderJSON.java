@@ -1,4 +1,4 @@
-package com.jqy.server.core.codec;
+package com.jqy.server.core.codec.json;
 
 import java.nio.charset.Charset;
 
@@ -10,17 +10,17 @@ import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
 /**
- * 编码器
+ * 编码器 JSON模式
  * 
  * @author Simple
  * @date 2013-9-26 上午11:26:25
  * @Description TODO
  */
-public class ServerProtocolEncoder extends ProtocolEncoderAdapter {
+public class ServerProtocolEncoderJSON extends ProtocolEncoderAdapter {
 
   private Charset charset;
 
-  public ServerProtocolEncoder(Charset charset) {
+  public ServerProtocolEncoderJSON(Charset charset) {
     this.setCharset(charset);
   }
 

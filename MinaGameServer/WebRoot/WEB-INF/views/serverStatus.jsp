@@ -21,11 +21,11 @@
     
     <table border="1" cellspacing="0">
     	<tr>
-    		<td colspan="8">Server Status</td>
+    		<td colspan="10">Server Status</td>
     	</tr>
     	<tr>
     		<td>IoSession</td>
-    		<td colspan="7">Player</td>
+    		<td colspan="9">Player</td>
     	</tr>
     	<tr>
     		<td>sessionId</td>
@@ -34,6 +34,8 @@
     		<td>等级</td>
     		<td>注册日期</td>
     		<td>在线时长</td>
+    		<td>在线</td>
+    		<td>空闲时长</td>
     		<td>职业</td>
     		<td>用户名</td>
     	</tr>
@@ -45,7 +47,8 @@
    			<td>${obj.value.level }</td>
    			<td>${obj.value.regDate }</td>
    			<td>${obj.value._onlineTime }</td>
-   			
+   			<td>${obj.value._online==true?"在线":"离线" }</td>
+   			<td>${obj.value._idleTime }</td>
    			<td>${obj.value.job.type }</td>
    			<td>${obj.value.user.username }</td>
    		</tr>

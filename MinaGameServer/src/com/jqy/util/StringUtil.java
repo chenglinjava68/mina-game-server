@@ -8,7 +8,7 @@ public class StringUtil {
    * @param s
    * @return
    */
-  public boolean isNull(String s) {
+  public static boolean isNull(String s) {
     if(null == s || "null".equals(s) || "".equals(s))
       return true;
     return false;
@@ -20,7 +20,7 @@ public class StringUtil {
    * @param str
    * @return
    */
-  public String string2Hex(String str) {
+  public static String string2Hex(String str) {
     StringBuffer sb=new StringBuffer();
     byte[] b=str.getBytes();
     for(int i=0; i < b.length; i++) {
@@ -37,7 +37,7 @@ public class StringUtil {
    * @param str
    * @return
    */
-  public String string2Binary(String str) {
+  public static String string2Binary(String str) {
     StringBuffer sb=new StringBuffer();
     byte[] b=str.getBytes();
     for(int i=0; i < b.length; i++) {
@@ -54,7 +54,7 @@ public class StringUtil {
    * @param str
    * @return
    */
-  public String string2Octal(String str) {
+  public static String string2Octal(String str) {
     StringBuffer sb=new StringBuffer();
     byte[] b=str.getBytes();
     for(int i=0; i < b.length; i++) {
@@ -89,17 +89,16 @@ public class StringUtil {
   }
 
   public static void main(String[] args) {
-    StringUtil su=new StringUtil();
     String str="isRequest";
     System.out.println(str);
     // 2
-    String binary=su.string2Binary(str);
+    String binary=string2Binary(str);
     System.out.println("2进制:" + binary);
     // 8
-    String octal=su.string2Octal(str);
+    String octal=string2Octal(str);
     System.out.println("8进制:" + octal);
     // 16
-    String hex=su.string2Hex(str);
+    String hex=string2Hex(str);
     System.out.println("16进制:" + hex);
   }
 }

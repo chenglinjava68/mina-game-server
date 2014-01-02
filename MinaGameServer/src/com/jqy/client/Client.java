@@ -3,8 +3,6 @@ package com.jqy.client;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 
-import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.future.ConnectFuture;
@@ -12,9 +10,11 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 import com.jqy.server.common.Constant;
+import com.jqy.server.core.MyBuffer;
 
 public class Client implements Runnable {
 
+  @SuppressWarnings("unused")
   private Logger log=Logger.getLogger(this.getClass());
 
   private NioSocketConnector connector;
@@ -28,7 +28,7 @@ public class Client implements Runnable {
 
   private int i=0;
 
-  public ConnectFuture getCF() {
+  public ConnectFuture connection() {
     connector=new NioSocketConnector();
     // SocketSessionConfig ssc=connector.getSessionConfig();
     // 空闲
@@ -41,12 +41,30 @@ public class Client implements Runnable {
     connector.setConnectTimeoutMillis(3000);
     ConnectFuture cf=connector.connect(new InetSocketAddress("localhost", 9999));
     // ConnectFuture cf=connector.connect(new InetSocketAddress("172.19.0.176", 9999));
-    cf.awaitUninterruptibly();
+     cf.awaitUninterruptibly();// 等待异步执行结果的返回，属于阻塞
+//    cf.addListener(new IoFutureListener<ConnectFuture>() {// 等待异步执行结果的返回，不会阻塞
+//
+//        @Override
+//        public void operationComplete(ConnectFuture future) {
+//          try {
+//            Thread.sleep(1000);
+//          } catch(InterruptedException e) {
+//            e.printStackTrace();
+//          }
+//          if(future.isConnected()) {
+//            IoSession session=future.getSession();
+//            log.debug(String.format("连接成功,得到SESSION:%s", session.toString()));
+//          } else {
+//            log.debug("连接不存在");
+//          }
+//        }
+//      });
+//    log.debug("等待异步结果ing,继续往下执行");
     return cf;
   }
 
-  public void sendData(ConnectFuture cf, JSONObject jsonObject) {
-    cf.getSession().write(jsonObject);
+  public void sendData(ConnectFuture cf, MyBuffer buf) {
+    cf.getSession().write(buf);
   }
 
   public void end(ConnectFuture cf) {
@@ -54,64 +72,65 @@ public class Client implements Runnable {
     connector.dispose();
   }
 
-  public JSONObject regUser(int ptlId, String username, String password, String email) {
-    JSONObject jsonObject=getReqJson(ptlId);
-    JSONObject bodyData=new JSONObject();
-    bodyData.put("username", username);
-    bodyData.put("password", password);
-    bodyData.put("email", email);
-    jsonObject.put("data", bodyData);
-    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
-    return jsonObject;
+  public MyBuffer regUser(short ptlId, String username, String password, String email) {
+    MyBuffer buf=MyBuffer.allocate(1024);
+    buf.put(Constant.REQ);
+    buf.putShort(ptlId);
+    buf.putString(username);
+    buf.putString(password);
+    buf.putString(email);
+    buf.flip();
+    return buf;
   }
 
-  public JSONObject login(int ptlId, String username, String password) {
-    JSONObject jsonObject=getReqJson(ptlId);
-    JSONObject bodyData=new JSONObject();
-    bodyData.put("username", username);
-    bodyData.put("password", password);
-    jsonObject.put("data", bodyData);
-    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
-    return jsonObject;
+  public MyBuffer login(short ptlId, String username, String password) {
+    MyBuffer buf=MyBuffer.allocate(1024);
+    buf.put(Constant.REQ);
+    buf.putShort(ptlId);
+    buf.putString(username);
+    buf.putString(password);
+    buf.flip();
+    return buf;
   }
 
-  public JSONObject regPlayer(int ptlId, String nickName, boolean sex, int jobId) {
-    JSONObject jsonObject=getReqJson(ptlId);
-    JSONObject bodyData=new JSONObject();
-    bodyData.put("nickName", nickName);
-    bodyData.put("sex", sex);
-    bodyData.put("jobId", jobId);
-    jsonObject.put("data", bodyData);
-    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
-    return jsonObject;
+  public MyBuffer regPlayer(short ptlId, String nickName, boolean sex, int jobId) {
+    MyBuffer buf=MyBuffer.allocate(1024);
+    buf.put(Constant.REQ);
+    buf.putShort(ptlId);
+    buf.putString(nickName);
+    buf.put((byte)(sex == true ? 1 : 0));
+    buf.putInt(jobId);
+    buf.flip();
+    return buf;
   }
 
-  public JSONObject startGame(int ptlId, int roleIndex) {
-    JSONObject jsonObject=getReqJson(ptlId);
-    JSONObject bodyData=new JSONObject();
-    bodyData.put("roleIndex", roleIndex);
-    jsonObject.put("data", bodyData);
-    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
-    return jsonObject;
+  public MyBuffer startGame(short ptlId, int roleIndex) {
+    MyBuffer buf=MyBuffer.allocate(1024);
+    buf.put(Constant.REQ);
+    buf.putShort(ptlId);
+    buf.putInt(roleIndex);
+    buf.flip();
+    return buf;
   }
 
-  public JSONObject getAllPlayer(int ptlId) {
-    JSONObject jsonObject=getReqJson(ptlId);
-    JSONObject bodyData=new JSONObject();
-    jsonObject.put("data", bodyData);
-    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
-    return jsonObject;
+  public MyBuffer getAllPlayer(short ptlId) {
+    MyBuffer buf=MyBuffer.allocate(1024);
+    buf.put(Constant.REQ);
+    buf.putShort(ptlId);
+    buf.flip();
+    return buf;
+  }
+
+  public MyBuffer hearbeat(short ptlId) {
+    MyBuffer buf=MyBuffer.allocate(1024);
+    buf.put(Constant.REQ);
+    buf.putShort(ptlId);
+    buf.flip();
+    return buf;
   }
 
   @Override
   public void run() {
-  }
-
-  private JSONObject getReqJson(int ptlId) {
-    JSONObject jsonObject=new JSONObject();
-    jsonObject.put("type", Constant.REQ);
-    jsonObject.put("id", ptlId);
-    return jsonObject;
   }
 
   public void setI(int i) {
@@ -121,12 +140,8 @@ public class Client implements Runnable {
   public int getI() {
     return i;
   }
-
-  public JSONObject hearbeat(int ptlId) {
-    JSONObject jsonObject=getReqJson(ptlId);
-    JSONObject bodyData=new JSONObject();
-    jsonObject.put("data", bodyData);
-    log.debug(String.format("客户端请求数据=%s", jsonObject.toString()));
-    return jsonObject;
+  
+  public void login(){
+    
   }
 }

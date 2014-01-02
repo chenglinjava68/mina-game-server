@@ -4,14 +4,13 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.apache.mina.core.session.IoSession;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.jqy.server.common.Constant;
+import com.jqy.server.core.MyBuffer;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
 import com.jqy.server.entity.job.Job;
@@ -68,10 +67,10 @@ public class RegPlayerReq extends AbsReqProtocol {
   private int jobId;
 
   @Override
-  public void decode(JSONObject data) {
-    nickName=data.getString("nickName");
-    sex=data.getBoolean("sex");
-    jobId=data.getInt("jobId");
+  public void decode(MyBuffer buf) {
+    nickName=buf.getString();
+    sex=buf.get() == 0 ? false : true;
+    jobId=buf.getInt();
   }
 
   @Override
@@ -80,7 +79,7 @@ public class RegPlayerReq extends AbsReqProtocol {
     Player player=playerService.selectByNickName(nickName);
     if(null != player) {
       log.debug(String.format("nickName=%s exist!", nickName));
-      return new RegPlayerResp(2);// 用户名已存在
+      return new RegPlayerResp((byte)2);// 用户名已存在
     } else {
       player=new Player();
       player.setRegDate(new Date());
@@ -92,7 +91,7 @@ public class RegPlayerReq extends AbsReqProtocol {
         player.setUser(user);
       } else {
         log.error(String.format("严重错误"));
-        return new RegPlayerResp(9999);// 严重错误
+        return new RegPlayerResp((byte)9999);// 严重错误
       }
       // job
       Job job=jobService.selectByType(JobEnum.getByCode(jobId));
@@ -100,15 +99,15 @@ public class RegPlayerReq extends AbsReqProtocol {
         player.setJob(job);
       } else {
         log.debug(String.format("Job inited faild!can't found jobId=%s", jobId));
-        return new RegPlayerResp(3);// 职业不存在
+        return new RegPlayerResp((byte)3);// 职业不存在
       }
       if(playerService.create(player)) {
         user.getPlayers().add(player);
         // user.getPlayers().add(player);
         // userService.save(user);
-        return new RegPlayerResp(1);// 注册成功
+        return new RegPlayerResp((byte)1);// 注册成功
       }
     }
-    return new RegPlayerResp(0);// 失败
+    return new RegPlayerResp((byte)0);// 失败
   }
 }
