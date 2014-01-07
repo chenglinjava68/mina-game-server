@@ -43,9 +43,11 @@ public class ServerProtocolEncoderBYTE extends ProtocolEncoderAdapter {
     resp.put(type);
     resp.putShort(id);
     resp.putInt(bodyLength);
-    byte[] data=new byte[bodyLength];
-    myBuf.get(data);
-    resp.put(data);
+    if(bodyLength != 0) {
+      byte[] data=new byte[bodyLength];
+      myBuf.get(data);
+      resp.put(data);
+    }
     resp.flip();
     out.write(resp);
   }

@@ -16,7 +16,6 @@ import javax.swing.JTextField;
 import org.apache.log4j.Logger;
 
 import com.jqy.client.MyClient;
-import com.jqy.client.MyPlayer;
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.MyBuffer;
 
@@ -57,7 +56,7 @@ public class CreateRole extends JFrame {
 
   private JButton button_create;
 
-  private JButton button_start;
+  private JButton button_return;
 
   private JPanel panel1;
 
@@ -94,7 +93,7 @@ public class CreateRole extends JFrame {
     radio_sex1=new JRadioButton("MAN");
     radio_sex2=new JRadioButton("WOMEN");
     button_create=new JButton("CREATE ROLE");
-    button_start=new JButton("START GAME");
+    button_return=new JButton("RETURN SELECT ROLE");
     panel1=new JPanel();
     panel2=new JPanel();
     panel3=new JPanel();
@@ -103,7 +102,7 @@ public class CreateRole extends JFrame {
     panel6=new JPanel();
     panel7=new JPanel();
     // 设置布局
-    this.setLayout(new GridLayout(7, 1));
+    this.setLayout(new GridLayout(8, 1));
     panel1.add(label_job1);
     panel1.add(radio_job1);
     panel2.add(label_job2);
@@ -126,7 +125,7 @@ public class CreateRole extends JFrame {
     group2.add(radio_sex1);
     group2.add(radio_sex2);
     panel7.add(button_create);
-    panel7.add(button_start);
+    panel7.add(button_return);
     this.add(panel1);
     this.add(panel2);
     this.add(panel3);
@@ -134,7 +133,7 @@ public class CreateRole extends JFrame {
     this.add(panel5);
     this.add(panel6);
     this.add(panel7);
-    this.setSize(300, 400);
+    this.setSize(300, 600);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setVisible(true);
     this.setTitle("CREATE ROLE");
@@ -167,7 +166,7 @@ public class CreateRole extends JFrame {
           sex=false;
         }
         log.debug(String.format("JOB=%s,NICKNAME=%s,SEX=%s", job, nickname, sex));
-        MyBuffer buf=regPlayer((short)0x0005, nickname, sex, job);
+        MyBuffer buf=reqRegPlayer((short)0x0005, nickname, sex, job);
         if(client.sendMessage(buf)) {
           Object message=client.readMessage();
           if(null != message) {
@@ -180,9 +179,8 @@ public class CreateRole extends JFrame {
                 break;
               case 1:
                 JOptionPane.showMessageDialog(null, String.format("CREATE ROLE SUCCESS!"));
-                savePlayer(nickname, sex);
-                // dispose();
-                // new CreateRole(client).init();
+                dispose();
+                new SelectRole(client).init();
                 break;
               case 2:
                 JOptionPane.showMessageDialog(null, String.format("Nickname EXIST!"));
@@ -198,31 +196,22 @@ public class CreateRole extends JFrame {
           }
         }
       }
-
-      private void savePlayer(String nickname, boolean sex) {
-        MyPlayer player=new MyPlayer();
-        player.setNickName(nickname);
-        player.setSex(sex);
-        player.setLevel(1);
-        client.setPlayer(player);
-      }
     });
-    button_start.addActionListener(new ActionListener() {
+    button_return.addActionListener(new ActionListener() {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        JOptionPane.showMessageDialog(null, String.format("GAME STARTING!"));
         dispose();
-        new World(client).init();
+        new SelectRole(client).init();
       }
     });
   }
 
-  public MyBuffer regPlayer(short ptlId, String nickName, boolean sex, int jobId) {
+  public MyBuffer reqRegPlayer(short ptlId, String nickName, boolean sex, int jobId) {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);
-    buf.putString(nickName);
+    buf.putPrefixedString(nickName);
     buf.put((byte)(sex == true ? 1 : 0));
     buf.putInt(jobId);
     buf.flip();

@@ -8,7 +8,7 @@ public class ChatResp extends AbsRespProtocol {
 
   private static final byte TYPE=Constant.RESP;
 
-  private static final short ID=0x0099;
+  private static final short ID=0x0014;
 
   @Override
   public short getProtocolId() {

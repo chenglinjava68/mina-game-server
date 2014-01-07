@@ -37,7 +37,8 @@ public class ServerHandlerBYTE extends IoHandlerAdapter implements InitializingB
 
   @Override
   public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-    log.debug("exceptionCaught=" + cause);
+    // TODO Auto-generated method stub
+    super.exceptionCaught(session, cause);
   }
 
   @Override
@@ -67,13 +68,15 @@ public class ServerHandlerBYTE extends IoHandlerAdapter implements InitializingB
           req.decode(bodyBuf);
           // 执行业务逻辑
           AbsRespProtocol resp=req.execute(session, req);
-          // 响应给客户端的数据
-          MyBuffer respBuf=MyBuffer.allocate(1024);
-          respBuf.put(resp.getProtocolType());
-          respBuf.putShort(resp.getProtocolId());
-          resp.encode(respBuf);
-          respBuf.flip();
-          session.write(respBuf);
+          if(resp != null) {
+            // 响应给客户端的数据
+            MyBuffer respBuf=MyBuffer.allocate(1024);
+            respBuf.put(resp.getProtocolType());
+            respBuf.putShort(resp.getProtocolId());
+            resp.encode(respBuf);
+            respBuf.flip();
+            session.write(respBuf);
+          }
         } else {
           log.debug(String.format("NAME=%s的协议不存在", protocolName));
         }
@@ -140,7 +143,7 @@ public class ServerHandlerBYTE extends IoHandlerAdapter implements InitializingB
       String className=String.valueOf(name);
       // 把协议号+类名放入map中
       if(reqProtocolsMap.containsKey(reqPtl.getProtocolId())) {
-        log.debug(name.toString() + "类的ProtocolId已存在!");
+        log.debug(className + "类的ProtocolId已存在!");
       } else {
         reqProtocolsMap.put(reqPtl.getProtocolId(), className);
         log.debug(String.format("注册协议[%s] \t 编号[%s]", className, reqPtl.getProtocolId()));

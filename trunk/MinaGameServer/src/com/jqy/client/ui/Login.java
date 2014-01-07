@@ -91,7 +91,7 @@ public class Login extends JFrame {
         }
         client=new MyClient();
         if(client.connection()) {
-          MyBuffer buf=login((short)0x0003, username, password);
+          MyBuffer buf=reqLogin((short)0x0003, username, password);
           if(!client.sendMessage(buf)) {
             log.error("发送信息失败!");
             return;
@@ -107,7 +107,7 @@ public class Login extends JFrame {
                 JOptionPane.showMessageDialog(panel1, String.format("LOGIN SUCCESS!"));
                 saveUser(username, password);
                 dispose();
-                new CreateRole(client).init();
+                new SelectRole(client).init();
               } else {
                 JOptionPane.showMessageDialog(panel1, String.format("LOGIN FAILD!"));
               }
@@ -136,12 +136,12 @@ public class Login extends JFrame {
     });
   }
 
-  public MyBuffer login(short ptlId, String username, String password) {
+  public MyBuffer reqLogin(short ptlId, String username, String password) {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);
-    buf.putString(username);
-    buf.putString(password);
+    buf.putPrefixedString(username);
+    buf.putPrefixedString(password);
     buf.flip();
     return buf;
   }

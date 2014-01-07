@@ -68,7 +68,7 @@ public class RegPlayerReq extends AbsReqProtocol {
 
   @Override
   public void decode(MyBuffer buf) {
-    nickName=buf.getString();
+    nickName=buf.getPrefixedString();
     sex=buf.get() == 0 ? false : true;
     jobId=buf.getInt();
   }

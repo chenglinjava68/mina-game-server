@@ -9,13 +9,13 @@ public class DataUtil {
   private static Logger log=Logger.getLogger(DataUtil.class);
 
   public static MyBuffer getBodyData(Object o) {
-    MyBuffer myBuf=(MyBuffer)o;
-    myBuf.flip();
-    byte type=myBuf.get();
-    short id=myBuf.getShort();
-    int length=myBuf.getInt();
+    MyBuffer message=(MyBuffer)o;
+    message.flip();
+    byte type=message.get();
+    short id=message.getShort();
+    int length=message.getInt();
     byte[] data=new byte[length];
-    myBuf.get(data);
+    message.get(data);
     MyBuffer bodyData=MyBuffer.allocate(length);
     bodyData.put(data);
     bodyData.flip();
