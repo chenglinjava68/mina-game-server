@@ -56,8 +56,8 @@ public class LoginReq extends AbsReqProtocol {
 
   @Override
   public void decode(MyBuffer buf) {
-    username=buf.getString();
-    password=buf.getString();
+    username=buf.getPrefixedString();
+    password=buf.getPrefixedString();
   }
 
   @Override

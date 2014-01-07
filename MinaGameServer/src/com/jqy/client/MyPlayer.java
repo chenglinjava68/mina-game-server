@@ -1,6 +1,8 @@
 package com.jqy.client;
 
 public class MyPlayer {
+  
+  private int id;// id
 
   private String nickName;// 昵称
 
@@ -30,5 +32,13 @@ public class MyPlayer {
 
   public void setLevel(int level) {
     this.level=level;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public int getId() {
+    return id;
   }
 }

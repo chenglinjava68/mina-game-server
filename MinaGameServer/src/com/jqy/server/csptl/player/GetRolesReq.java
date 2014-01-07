@@ -1,6 +1,6 @@
-package com.jqy.server.csptl.chat;
+package com.jqy.server.csptl.player;
 
-import javax.annotation.Resource;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.mina.core.session.IoSession;
@@ -12,10 +12,10 @@ import com.jqy.server.core.MyBuffer;
 import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
 import com.jqy.server.entity.player.Player;
-import com.jqy.server.service.IChatService;
+import com.jqy.server.entity.user.User;
 
 /**
- * 聊天 请求协议
+ * 角色列表
  * 
  * 此类协议都要使用原型模式
  * 
@@ -25,13 +25,13 @@ import com.jqy.server.service.IChatService;
  */
 @Component
 @Scope("prototype")
-public class ChatReq extends AbsReqProtocol {
+public class GetRolesReq extends AbsReqProtocol {
 
   private Logger log=Logger.getLogger(this.getClass());
 
   private static final byte TYPE=Constant.REQ;
 
-  private static final short ID=0x0013;
+  private static final short ID=0x0015;
 
   @Override
   public short getProtocolId() {
@@ -43,33 +43,20 @@ public class ChatReq extends AbsReqProtocol {
     return TYPE;
   }
 
-  @Resource
-  private IChatService chatService;
-
-  private byte type;
-
-  private String message;
-
   @Override
   public void decode(MyBuffer buf) {
-    // 数据解码
-    type=buf.get();
-    message=buf.getPrefixedString();
   }
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
-    log.debug(String.format("chat execute"));
-    Player p=getPlayer();
-    String nickName=p.getNickName();
-    String msg=String.format("[%s]说:%s", nickName, message);
-    switch(type) {
-      case Constant.CHAT_COMMON:
-        chatService.send2common(msg);
-        break;
-      case Constant.CHAT_PRIVATE:
-        break;
+    log.debug(String.format("getRoles execute"));
+    User user=getUser();
+    if(null != user) {
+      List<Player> players=user.getPlayers();
+      return new GetRolesResp(Constant.SUCCESS, players);
+    } else {
+      log.debug("尼玛，又null了！");
+      return new GetRolesResp(Constant.FAILD);
     }
-    return null;
   }
 }

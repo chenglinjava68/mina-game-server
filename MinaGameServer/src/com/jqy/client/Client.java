@@ -76,9 +76,9 @@ public class Client implements Runnable {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);
-    buf.putString(username);
-    buf.putString(password);
-    buf.putString(email);
+    buf.putPrefixedString(username);
+    buf.putPrefixedString(password);
+    buf.putPrefixedString(email);
     buf.flip();
     return buf;
   }
@@ -87,8 +87,8 @@ public class Client implements Runnable {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);
-    buf.putString(username);
-    buf.putString(password);
+    buf.putPrefixedString(username);
+    buf.putPrefixedString(password);
     buf.flip();
     return buf;
   }
@@ -97,7 +97,7 @@ public class Client implements Runnable {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);
-    buf.putString(nickName);
+    buf.putPrefixedString(nickName);
     buf.put((byte)(sex == true ? 1 : 0));
     buf.putInt(jobId);
     buf.flip();
@@ -143,5 +143,13 @@ public class Client implements Runnable {
   
   public void login(){
     
+  }
+
+  public void setConnector(NioSocketConnector connector) {
+    this.connector = connector;
+  }
+
+  public NioSocketConnector getConnector() {
+    return connector;
   }
 }

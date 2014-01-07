@@ -68,16 +68,16 @@ public class MyBuffer {
     return this;
   }
 
-  public String getString() {
+  /*public String getString() {
     try {
       return getIoBuffer().getString(getIoBuffer().getShort(), charsetDecoder_utf8);
     } catch(CharacterCodingException e) {
       e.printStackTrace();
     }
     return null;
-  }
+  }*/
 
-  public MyBuffer putString(String s) {
+  /*public MyBuffer putString(String s) {
     if(s == null)
       return this;
     try {
@@ -87,7 +87,7 @@ public class MyBuffer {
       e.printStackTrace();
     }
     return this;
-  }
+  }*/
 
   public byte get() {
     return getIoBuffer().get();

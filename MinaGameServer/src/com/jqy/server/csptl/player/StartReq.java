@@ -49,25 +49,28 @@ public class StartReq extends AbsReqProtocol {
   @Resource
   private IOnlineService onlineService;
 
-  private int roleIndex;
+  private int selectedRoleId;
 
   @Override
   public void decode(MyBuffer buf) {
-    roleIndex=buf.getInt();
+    selectedRoleId=buf.getInt();
   }
 
   @Override
   public AbsRespProtocol execute(IoSession session, AbsReqProtocol req) {
     log.debug(String.format("start execute"));
-    User u=getUser();
-    List<Player> players=u.getPlayers();
-    if(players.size() > 0) {
-      Player player=players.get(roleIndex);
-      if(null != player) {
-        session.setAttribute(Constant.PLAYER, player);
-        onlineService.setOnlinePlayer(session, player);
-        return new StartResp(Constant.SUCCESS);
+    User user=getUser();
+    List<Player> playerList=user.getPlayers();
+    Player selectedPlayer=null;
+    for(Player p: playerList) {
+      if(selectedRoleId == p.getId()) {
+        selectedPlayer=p;
       }
+    }
+    if(null != selectedPlayer) {
+      session.setAttribute(Constant.PLAYER, selectedPlayer);
+      onlineService.setOnlinePlayer(session, selectedPlayer);
+      return new StartResp(Constant.SUCCESS);
     }
     return new StartResp(Constant.FAILD);
   }

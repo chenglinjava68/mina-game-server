@@ -56,9 +56,9 @@ public class RegUserReq extends AbsReqProtocol {
 
   @Override
   public void decode(MyBuffer buf) {
-    username=buf.getString();
-    password=buf.getString();
-    email=buf.getString();
+    username=buf.getPrefixedString();
+    password=buf.getPrefixedString();
+    email=buf.getPrefixedString();
   }
 
   @Override

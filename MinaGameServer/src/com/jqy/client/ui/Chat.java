@@ -15,11 +15,12 @@ import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 
+import com.jqy.client.ClientHandler;
 import com.jqy.client.MyClient;
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.MyBuffer;
 
-public class World extends JFrame {
+public class Chat extends JFrame {
 
   /**
    * 
@@ -53,7 +54,7 @@ public class World extends JFrame {
 
   private MyClient client;
 
-  public World(MyClient client) {
+  public Chat(MyClient client) {
     this.client=client;
   }
 
@@ -61,6 +62,7 @@ public class World extends JFrame {
    * 
    */
   public void init() {
+    registerToHandler();
     this.setLayout(new BorderLayout());
     this.setSize(600, 600);
     // 头
@@ -111,13 +113,18 @@ public class World extends JFrame {
     setAction();
   }
 
+  private void registerToHandler() {
+    ClientHandler ch=(ClientHandler)client.getConnector().getHandler();
+    ch.registeComponent("Chat", this);
+  }
+
   private void setAction() {
     button_sendMessage.addActionListener(new ActionListener() {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        String message=area_message.getText();
-        MyBuffer buf=sendMessage((short)0x0000, Constant.CHAT_COMMON, message);
+        String message=field_sendMessage.getText();
+        MyBuffer buf=reqSendMessage((short)0x0013, Constant.CHAT_COMMON, message);
         if(client.sendMessage(buf)) {
           Object o=client.readMessage();
           if(null != o) {
@@ -138,12 +145,12 @@ public class World extends JFrame {
     });
   }
 
-  public MyBuffer sendMessage(short ptlId, byte type, String message) {
+  public MyBuffer reqSendMessage(short ptlId, byte type, String message) {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);
     buf.put(type);
-    buf.putString(message);
+    buf.putPrefixedString(message);
     buf.flip();
     return buf;
   }
@@ -157,6 +164,10 @@ public class World extends JFrame {
   }
 
   public static void main(String[] args) {
-    new World(null).init();
+    new Chat(null).init();
+  }
+
+  public void fromServerMessage(String message) {
+    area_message.setText(area_message.getText() + "\r\n" + message);
   }
 }

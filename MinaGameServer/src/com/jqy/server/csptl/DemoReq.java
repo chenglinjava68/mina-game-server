@@ -69,7 +69,7 @@ public class DemoReq extends AbsReqProtocol {
     param4=buf.getLong();
     param5=buf.getFloat();
     param6=buf.getDouble();
-    param7=buf.getString();
+    param7=buf.getPrefixedString();
   }
 
   @Override

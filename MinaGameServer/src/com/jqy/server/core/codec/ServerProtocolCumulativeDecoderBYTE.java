@@ -39,7 +39,7 @@ public class ServerProtocolCumulativeDecoderBYTE extends CumulativeProtocolDecod
    */
   @Override
   protected boolean doDecode(IoSession session, IoBuffer buf, ProtocolDecoderOutput out) throws Exception {
-    if(buf.remaining() > ServerConfig.HEAD_LENGTH) {// 有数据，先读取报头
+    if(buf.remaining() >= ServerConfig.HEAD_LENGTH) {// 有数据，先读取报头
       buf.mark();// 做标记，以便数据不完整时恢复
       byte head_ptlType=buf.get();// 类型
       short head_ptlId=buf.getShort();// ID

@@ -32,7 +32,7 @@ public class ClientProtocolEncoder extends ProtocolEncoderAdapter {
     MyBuffer myBuf=(MyBuffer)obj;
     byte type=myBuf.get();
     short id=myBuf.getShort();
-    int bodyLength;
+    int bodyLength=0;
     if(myBuf.remaining() > 0) {// 有数据
       bodyLength=myBuf.limit() - 1 - 2;
     } else {
@@ -43,9 +43,11 @@ public class ClientProtocolEncoder extends ProtocolEncoderAdapter {
     resp.put(type);
     resp.putShort(id);
     resp.putInt(bodyLength);
-    byte[] data=new byte[bodyLength];
-    myBuf.get(data);
-    resp.put(data);
+    if(bodyLength != 0) {
+      byte[] data=new byte[bodyLength];
+      myBuf.get(data);
+      resp.put(data);
+    }
     resp.flip();
     out.write(resp);
   }
