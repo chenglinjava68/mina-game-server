@@ -166,7 +166,7 @@ public class CreateRole extends JFrame {
           sex=false;
         }
         log.debug(String.format("JOB=%s,NICKNAME=%s,SEX=%s", job, nickname, sex));
-        MyBuffer buf=reqRegPlayer((short)0x0005, nickname, sex, job);
+        MyBuffer buf=buf_regPlayer((short)0x0005, nickname, sex, job);
         if(client.sendMessage(buf)) {
           Object message=client.readMessage();
           if(null != message) {
@@ -207,7 +207,7 @@ public class CreateRole extends JFrame {
     });
   }
 
-  public MyBuffer reqRegPlayer(short ptlId, String nickName, boolean sex, int jobId) {
+  public MyBuffer buf_regPlayer(short ptlId, String nickName, boolean sex, int jobId) {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);

@@ -67,7 +67,7 @@ public class SelectRole extends JFrame {
    * 生成角色列表
    */
   private void generateRoleListPanel() {
-    List<MyPlayer> players=reqRoles();
+    List<MyPlayer> players=buf_roles();
     // 设置布局
     this.setLayout(new GridLayout(players.size() + 1, 1));
     if(null != players) {
@@ -92,8 +92,8 @@ public class SelectRole extends JFrame {
    * 
    * @return
    */
-  private List<MyPlayer> reqRoles() {
-    MyBuffer buf=reqGetRoles((short)0x0015);
+  private List<MyPlayer> buf_roles() {
+    MyBuffer buf=buf_getRoles((short)0x0015);
     if(client.sendMessage(buf)) {
       log.debug("req success");
       Object message=client.readMessage();
@@ -129,7 +129,7 @@ public class SelectRole extends JFrame {
    * @param jobId
    * @return
    */
-  private MyBuffer reqGetRoles(short ptlId) {
+  private MyBuffer buf_getRoles(short ptlId) {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);
@@ -194,7 +194,7 @@ public class SelectRole extends JFrame {
   }
 
   private void startGame(int selectedRoleId) {
-    MyBuffer buf=reqStartGame((short)0x0011, selectedRoleId);
+    MyBuffer buf=buf_startGame((short)0x0011, selectedRoleId);
     if(client.sendMessage(buf)) {
       log.debug("req success");
       Object message=client.readMessage();
@@ -209,7 +209,7 @@ public class SelectRole extends JFrame {
     }
   }
 
-  private MyBuffer reqStartGame(short ptlId, int id) {
+  private MyBuffer buf_startGame(short ptlId, int id) {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);

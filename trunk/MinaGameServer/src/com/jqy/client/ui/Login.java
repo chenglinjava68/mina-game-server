@@ -1,9 +1,14 @@
 package com.jqy.client.ui;
 
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -74,6 +79,13 @@ public class Login extends JFrame {
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setVisible(true);
     this.setTitle("LOGIN");
+    Image image=null;
+    try {
+      image=ImageIO.read(this.getClass().getResource("logo.jpg"));
+    } catch(IOException e) {
+      e.printStackTrace();
+    }
+    this.setIconImage(image);
     setAction();
   }
 
@@ -82,49 +94,8 @@ public class Login extends JFrame {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        String username=field_username.getText();
-        String password=String.valueOf(field_password.getPassword());
-        if(StringUtil.isNull(username) || StringUtil.isNull(password)) {
-          JOptionPane.showMessageDialog(panel1, String.format("Account or Password is null!"));
-        } else {
-          JOptionPane.showMessageDialog(panel1, String.format("账号=%s,密码=%s", username, password));
-        }
-        client=new MyClient();
-        if(client.connection()) {
-          MyBuffer buf=reqLogin((short)0x0003, username, password);
-          if(!client.sendMessage(buf)) {
-            log.error("发送信息失败!");
-            return;
-          } else {
-            log.debug("发送信息成功!");
-            Object message=client.readMessage();
-            if(null != message) {
-              // 解析数据
-              MyBuffer bodyData=DataUtil.getBodyData(message);
-              byte result=bodyData.get();
-              log.debug(String.format("RESULT=%s", result));
-              if(result != 0) {
-                JOptionPane.showMessageDialog(panel1, String.format("LOGIN SUCCESS!"));
-                saveUser(username, password);
-                dispose();
-                new SelectRole(client).init();
-              } else {
-                JOptionPane.showMessageDialog(panel1, String.format("LOGIN FAILD!"));
-              }
-            } else {
-              log.debug("读到的信息为null");
-            }
-          }
-        } else {
-          JOptionPane.showMessageDialog(panel1, String.format("connect to server faild!"));
-        }
-      }
-
-      private void saveUser(String username, String password) {
-        MyUser user=new MyUser();
-        user.setUsername(username);
-        user.setPassword(password);
-        client.setUser(user);
+        log.debug("action");
+        login();
       }
     });
     button_cancel.addActionListener(new ActionListener() {
@@ -134,9 +105,26 @@ public class Login extends JFrame {
         dispose();
       }
     });
+    button_login.addKeyListener(new KeyListener() {
+
+      @Override
+      public void keyTyped(KeyEvent e) {
+        log.debug("key action");
+        if(e.getKeyChar() == KeyEvent.VK_ENTER)
+          login();
+      }
+
+      @Override
+      public void keyReleased(KeyEvent e) {
+      }
+
+      @Override
+      public void keyPressed(KeyEvent e) {
+      }
+    });
   }
 
-  public MyBuffer reqLogin(short ptlId, String username, String password) {
+  public MyBuffer buf_login(short ptlId, String username, String password) {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);
@@ -144,5 +132,51 @@ public class Login extends JFrame {
     buf.putPrefixedString(password);
     buf.flip();
     return buf;
+  }
+
+  private void login() {
+    String username=field_username.getText();
+    String password=String.valueOf(field_password.getPassword());
+    if(StringUtil.isNull(username) || StringUtil.isNull(password)) {
+      JOptionPane.showMessageDialog(panel1, String.format("Account or Password is null!"));
+    } else {
+      JOptionPane.showMessageDialog(panel1, String.format("账号=%s,密码=%s", username, password));
+    }
+    client=new MyClient();
+    if(client.connection()) {
+      MyBuffer buf=buf_login((short)0x0003, username, password);
+      if(!client.sendMessage(buf)) {
+        log.error("发送信息失败!");
+        return;
+      } else {
+        log.debug("发送信息成功!");
+        Object message=client.readMessage();
+        if(null != message) {
+          // 解析数据
+          MyBuffer bodyData=DataUtil.getBodyData(message);
+          byte result=bodyData.get();
+          log.debug(String.format("RESULT=%s", result));
+          if(result != 0) {
+            JOptionPane.showMessageDialog(panel1, String.format("LOGIN SUCCESS!"));
+            saveUser(username, password);
+            dispose();
+            new SelectRole(client).init();
+          } else {
+            JOptionPane.showMessageDialog(panel1, String.format("LOGIN FAILD!"));
+          }
+        } else {
+          log.debug("读到的信息为null");
+        }
+      }
+    } else {
+      JOptionPane.showMessageDialog(panel1, String.format("connect to server faild!"));
+    }
+  }
+
+  private void saveUser(String username, String password) {
+    MyUser user=new MyUser();
+    user.setUsername(username);
+    user.setPassword(password);
+    client.setUser(user);
   }
 }

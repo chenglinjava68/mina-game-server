@@ -51,6 +51,18 @@ public class ClientHandler extends IoHandlerAdapter {
         Chat chat=(Chat)map.get("Chat");
         chat.fromServerMessage(msg);
         break;
+      case 0x0018:
+        int playerId=bodyBuf.getInt();
+        int playerLevel=bodyBuf.getInt();
+        String playerNickName=bodyBuf.getPrefixedString();
+        log.debug(String.format("[%s-%s-%s]登录到聊天频道", playerId, playerLevel, playerNickName));
+        Chat chat2=(Chat)map.get("Chat");
+        MyPlayer mp=new MyPlayer();
+        mp.setId(playerId);
+        mp.setNickName(playerNickName);
+        mp.setLevel(playerLevel);
+        chat2.playerEnter(mp);
+        break;
     }
   }
 
