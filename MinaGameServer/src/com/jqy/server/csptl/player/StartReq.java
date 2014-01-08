@@ -15,6 +15,7 @@ import com.jqy.server.core.protocol.AbsReqProtocol;
 import com.jqy.server.core.protocol.AbsRespProtocol;
 import com.jqy.server.entity.player.Player;
 import com.jqy.server.entity.user.User;
+import com.jqy.server.service.IChatService;
 import com.jqy.server.service.IOnlineService;
 
 /**
@@ -49,6 +50,9 @@ public class StartReq extends AbsReqProtocol {
   @Resource
   private IOnlineService onlineService;
 
+  @Resource
+  private IChatService chatService;
+
   private int selectedRoleId;
 
   @Override
@@ -70,6 +74,7 @@ public class StartReq extends AbsReqProtocol {
     if(null != selectedPlayer) {
       session.setAttribute(Constant.PLAYER, selectedPlayer);
       onlineService.setOnlinePlayer(session, selectedPlayer);
+      chatService.playerEnter(selectedPlayer);
       return new StartResp(Constant.SUCCESS);
     }
     return new StartResp(Constant.FAILD);

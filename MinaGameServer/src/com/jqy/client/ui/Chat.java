@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import com.jqy.client.ClientHandler;
 import com.jqy.client.MyClient;
+import com.jqy.client.MyPlayer;
 import com.jqy.server.common.Constant;
 import com.jqy.server.core.MyBuffer;
 
@@ -54,6 +57,8 @@ public class Chat extends JFrame {
 
   private MyClient client;
 
+  private Map<Integer, MyPlayer> onlinePlayers=new HashMap<Integer, MyPlayer>();
+
   public Chat(MyClient client) {
     this.client=client;
   }
@@ -63,6 +68,7 @@ public class Chat extends JFrame {
    */
   public void init() {
     registerToHandler();
+    onlinePlayers();
     this.setLayout(new BorderLayout());
     this.setSize(600, 600);
     // 头
@@ -79,6 +85,10 @@ public class Chat extends JFrame {
     panel_left.setPreferredSize(new Dimension(100, 475));
     area_playerList=new JTextArea(28, 8);
     panel_left.add(area_playerList);
+    for(MyPlayer p: onlinePlayers.values()) {
+      area_playerList.setText(area_playerList.getText() + "\r\n" + "(" + p.getId() + ")" + p.getNickName() + "[" + p.getLevel()
+        + "]");
+    }
     // 中
     panel_center=new JPanel();
     panel_center.setBackground(Color.CYAN);
@@ -109,8 +119,44 @@ public class Chat extends JFrame {
     // 
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setVisible(true);
-    this.setTitle("WORLD");
+    this.setTitle("CHAT");
     setAction();
+  }
+
+  private void onlinePlayers() {
+    MyBuffer buf=buf_onlinePlayerList((short)0x0019);
+    if(client.sendMessage(buf)) {
+      Object o=client.readMessage();
+      if(null != o) {
+        // 解析数据
+        MyBuffer bodyData=DataUtil.getBodyData(o);
+        byte result=bodyData.get();
+        log.debug(String.format("RESULT=%s", result));
+        switch(result) {
+          case 0:
+            break;
+          case 1:
+            int size=bodyData.getInt();
+            for(int i=0; i < size; i++) {
+              MyPlayer mp=new MyPlayer();
+              mp.setId(bodyData.getInt());
+              mp.setLevel(bodyData.getInt());
+              mp.setNickName(bodyData.getPrefixedString());
+              onlinePlayers.put(mp.getId(), mp);
+            }
+            log.debug("在线人数=" + onlinePlayers.size());
+            break;
+        }
+      }
+    }
+  }
+
+  private MyBuffer buf_onlinePlayerList(short ptlId) {
+    MyBuffer buf=MyBuffer.allocate(1024);
+    buf.put(Constant.REQ);
+    buf.putShort(ptlId);
+    buf.flip();
+    return buf;
   }
 
   private void registerToHandler() {
@@ -124,7 +170,7 @@ public class Chat extends JFrame {
       @Override
       public void actionPerformed(ActionEvent e) {
         String message=field_sendMessage.getText();
-        MyBuffer buf=reqSendMessage((short)0x0013, Constant.CHAT_COMMON, message);
+        MyBuffer buf=buf_sendMessage((short)0x0013, Constant.CHAT_COMMON, message);
         if(client.sendMessage(buf)) {
           Object o=client.readMessage();
           if(null != o) {
@@ -145,7 +191,7 @@ public class Chat extends JFrame {
     });
   }
 
-  public MyBuffer reqSendMessage(short ptlId, byte type, String message) {
+  private MyBuffer buf_sendMessage(short ptlId, byte type, String message) {
     MyBuffer buf=MyBuffer.allocate(1024);
     buf.put(Constant.REQ);
     buf.putShort(ptlId);
@@ -169,5 +215,18 @@ public class Chat extends JFrame {
 
   public void fromServerMessage(String message) {
     area_message.setText(area_message.getText() + "\r\n" + message);
+  }
+
+  public void playerEnter(MyPlayer mp) {
+    if(!onlinePlayers.containsKey(mp.getId())) {
+      onlinePlayers.put(mp.getId(), mp);
+      area_playerList.setText(area_playerList.getText() + "\r\n" + "(" + mp.getId() + ")" + mp.getNickName() + "[" + mp.getLevel()
+        + "]");
+    } else {
+      for(MyPlayer p: onlinePlayers.values()) {
+        area_playerList.setText(area_playerList.getText() + "\r\n" + "(" + p.getId() + ")" + p.getNickName() + "[" + p.getLevel()
+          + "]");
+      }
+    }
   }
 }
