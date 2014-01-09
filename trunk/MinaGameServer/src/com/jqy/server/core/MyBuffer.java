@@ -68,27 +68,14 @@ public class MyBuffer {
     return this;
   }
 
-  /*public String getString() {
-    try {
-      return getIoBuffer().getString(getIoBuffer().getShort(), charsetDecoder_utf8);
-    } catch(CharacterCodingException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }*/
-
-  /*public MyBuffer putString(String s) {
-    if(s == null)
-      return this;
-    try {
-      getIoBuffer().putShort((short)s.getBytes().length);
-      getIoBuffer().putString(s, charsetEncoder_utf8);
-    } catch(CharacterCodingException e) {
-      e.printStackTrace();
-    }
-    return this;
-  }*/
-
+  /*
+   * public String getString() { try { return getIoBuffer().getString(getIoBuffer().getShort(), charsetDecoder_utf8); }
+   * catch(CharacterCodingException e) { e.printStackTrace(); } return null; }
+   */
+  /*
+   * public MyBuffer putString(String s) { if(s == null) return this; try { getIoBuffer().putShort((short)s.getBytes().length);
+   * getIoBuffer().putString(s, charsetEncoder_utf8); } catch(CharacterCodingException e) { e.printStackTrace(); } return this; }
+   */
   public byte get() {
     return getIoBuffer().get();
   }
@@ -185,5 +172,9 @@ public class MyBuffer {
 
   public int limit() {
     return getIoBuffer().limit();
+  }
+
+  public boolean hasRemaining() {
+    return this.ioBuffer.hasRemaining();
   }
 }

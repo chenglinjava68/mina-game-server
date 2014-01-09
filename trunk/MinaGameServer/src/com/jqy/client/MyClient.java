@@ -2,6 +2,7 @@ package com.jqy.client;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.Timer;
 
 import org.apache.log4j.Logger;
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
@@ -45,11 +46,20 @@ public class MyClient {
     if(cf.isConnected()) {
       session=cf.getSession();
       log.debug(String.format("connect to server success,SESSION=%s", session.toString()));
+      initTask();
       return true;
     } else {
       log.warn(String.format("connect to server faild!"));
       return false;
     }
+  }
+
+  /**
+   * 初始化任务
+   */
+  private void initTask() {
+    Timer timer=new Timer(true);
+    timer.schedule(new MyTimerTask(this), 1000, 10000);
   }
 
   /**
@@ -129,7 +139,7 @@ public class MyClient {
   }
 
   public void setUser(MyUser user) {
-    this.user = user;
+    this.user=user;
   }
 
   public MyUser getUser() {
@@ -137,7 +147,7 @@ public class MyClient {
   }
 
   public void setPlayer(MyPlayer player) {
-    this.player = player;
+    this.player=player;
   }
 
   public MyPlayer getPlayer() {
