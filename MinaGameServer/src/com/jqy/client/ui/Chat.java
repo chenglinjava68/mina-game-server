@@ -136,15 +136,17 @@ public class Chat extends JFrame {
           case 0:
             break;
           case 1:
-            int size=bodyData.getInt();
-            for(int i=0; i < size; i++) {
-              MyPlayer mp=new MyPlayer();
-              mp.setId(bodyData.getInt());
-              mp.setLevel(bodyData.getInt());
-              mp.setNickName(bodyData.getPrefixedString());
-              onlinePlayers.put(mp.getId(), mp);
+            if(bodyData.hasRemaining()) {
+              int size=bodyData.getInt();
+              for(int i=0; i < size; i++) {
+                MyPlayer mp=new MyPlayer();
+                mp.setId(bodyData.getInt());
+                mp.setLevel(bodyData.getInt());
+                mp.setNickName(bodyData.getPrefixedString());
+                onlinePlayers.put(mp.getId(), mp);
+              }
+              log.debug("在线人数=" + onlinePlayers.size());
             }
-            log.debug("在线人数=" + onlinePlayers.size());
             break;
         }
       }

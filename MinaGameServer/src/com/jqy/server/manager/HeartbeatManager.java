@@ -44,7 +44,7 @@ public class HeartbeatManager implements Runnable {
    * @param p
    */
   private void checkPlayerIsAlive(Player p) {
-    if(p.get_idleTime() > 1200) {// 空闲
+    if(p.get_idleTime() > 120) {// 空闲
       onlineService.removeOnlinePlayer(p);// 超出空闲时间，从在线列表移除玩家
       log.debug(String.format("玩家{%s}超出空闲时间,从在线列表移除!", p));
       userService.save(p.getUser());

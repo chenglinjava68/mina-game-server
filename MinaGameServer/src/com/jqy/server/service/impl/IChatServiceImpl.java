@@ -16,6 +16,7 @@ import com.jqy.server.csptl.chat.PlayerEnterResp;
 import com.jqy.server.entity.player.Player;
 import com.jqy.server.service.IChatService;
 import com.jqy.server.service.IOnlineService;
+import com.jqy.util.DateUtil;
 
 @Service
 public class IChatServiceImpl implements IChatService {
@@ -61,6 +62,7 @@ public class IChatServiceImpl implements IChatService {
     buf.put(type);
     buf.putShort(ptlId);
     // buf.putInt(length);
+    buf.putPrefixedString(DateUtil.getCurrentDate());
     buf.putPrefixedString(msg);
     buf.flip();
     return buf;

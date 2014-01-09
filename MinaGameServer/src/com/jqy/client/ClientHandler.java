@@ -46,10 +46,11 @@ public class ClientHandler extends IoHandlerAdapter {
         log.debug(String.format("result=%s", bodyBuf.get()));
         break;
       case 0x0014:
+        String date=bodyBuf.getPrefixedString();
         String msg=bodyBuf.getPrefixedString();
         log.debug("服务器发来消息了！！！" + msg);
         Chat chat=(Chat)map.get("Chat");
-        chat.fromServerMessage(msg);
+        chat.fromServerMessage("[" + date + "]" + msg);
         break;
       case 0x0018:
         int playerId=bodyBuf.getInt();
